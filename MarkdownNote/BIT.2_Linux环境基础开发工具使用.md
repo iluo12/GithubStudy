@@ -266,9 +266,14 @@ Omit --global to set the identity only in this repository.
 #### 3.push
 ```c
 git push
-输入 账号密码上传完成
+push 要在最里层文件夹中
+输入 账号(手机号)密码上传完成
 ```
 ### 四、查看日志
 ```c
 git log
 ```
+
+### 批量注释
+ctrl + v   j选中后   大写i   //  esc
+ctrl + v   l选中后   d
