@@ -91,13 +91,13 @@ Vue - 前端贡献：尤雨溪
 
 《STL源码剖析》《effcrive C++》 继承多态学完看 《高质量C++》现在看
 
-## string
+## string 成员函数
 
 ### c++文档：
 
 https://cplusplus.com/
 
-### string
+### 编码补充
 
 编码 - 值 -- 符号建立映射
 ASCII码表 - 表示英文编码表
@@ -106,7 +106,7 @@ gbk - 中文编码表
 
 
 
-### 常用的string
+### 常用的string 
 
 - 赋值
 
@@ -188,5 +188,190 @@ s1.append("bcde");
 cout << s1 << endl;
 ```
 
+## string 迭代器
 
+
+
+```
+	//遍历+修改
+	//方式1：下标+[]  
+	//返回对应位置的引用  可以直接修改s1[i]
+	for (size_t i = 0; i < s1.size(); ++i)
+	{
+		s1[i] += 1;
+	}
+	for (size_t i = 0; i < s1.size(); ++i)
+	{
+		cout << s1[i] << " ";
+	}
+	cout << endl;
+```
+
+迭代器想象成：像指针一样的类型
+
+### end()/begin()
+
+```c++
+      iterator begin();
+const_iterator begin() const;
+
+      iterator end();
+const_iterator end() const;
+```
+
+```c++
+string s1("hello world");
+//方式2：迭代器(iterator)
+//begin()指的是第一个元素的位置  end()是最后一个元素的【下一个】
+//it像指针一样指向第一个元素 ，可以解引用，可以++
+string::iterator it = s1.begin();
+while (it != s1.end())
+{
+    *it -= 1;
+    ++it;
+}
+it = s1.begin();//重置it的位置
+while (it != s1.end())
+{
+    cout << *it << " ";
+    ++it;
+}
+cout << endl;
+```
+
+#### iterator begin();
+
+范围for会替换成迭代器
+
+```c++
+//方式3：范围for   语法糖用起来很爽很甜
+// C++11   linux：-std=c++11
+//把s1中的值取出来 赋值给e 自动++
+//for (char& e : s1) 
+for (auto& e : s1) //引用  
+{
+    e += 1;
+}
+for (auto e:s1)
+{
+    cout << e << " ";
+}
+cout << endl;
+```
+
+#### const_iterator begin() const;
+
+const 版本只能读取 不能修改
+
+```c++
+void func(const string& s1)
+{
+	string::const_iterator it = s1.begin();
+	//auto it = s1.cbegin(); //cbegin()和cend()代表const
+	while (it != s1.end())
+	{
+		//*it -= 1; //不能修改
+		cout << *it << " ";
+		++it;
+	}
+	cout << endl;
+}
+```
+
+
+
+### rbegin()  / rend(): 反向迭代器 
+
+```c++
+      reverse_iterator rbegin();
+const_reverse_iterator rbegin() const;
+```
+
+- **rbegin() 最后一个字符**
+- **rebing()的 ++ 是向前走**
+- **rend()是第一个字符的前一个**
+
+```c++
+void test_string2()
+{
+	string s1("hello world");
+	//反向迭代器
+	//rbegin() 指向最后一个字符 
+	//
+	//反向++ 是逆向的
+	//string::reverse_iterator rit = s1.rbegin(); // string::reverse_iterator是类型
+	auto rit = s1.rbegin();//代替上面那句自动推到类型
+	while (rit != s1.rend())
+	{
+		cout << *rit << " ";
+		++rit;
+	}
+	cout << endl;
+
+	string cstr("hello world");
+	func(cstr);
+}
+```
+
+### c++11 新增const迭代器
+
+- [**cbegin**](https://m.cplusplus.com/reference/string/string/cbegin/)
+
+- [**cend**](https://m.cplusplus.com/reference/string/string/cend/)
+
+- [**crbegin**](https://m.cplusplus.com/reference/string/string/crbegin/)
+
+- [**crend**](https://m.cplusplus.com/reference/string/string/crend/)
+
+### 迭代器的意义是什么？
+
+> **所有的容器都可以使用迭代器这种方式去访问修改**
+
+#### 答：
+
+对于string，下标和[]就足够好用，确实可以不用迭代器。
+
+#### **其他容器(数据结构)呢？**
+
+(list、map/set 并不支持下标，只有数组才支持[]，这些是链表和二叉树并不支持下标+[])
+
+>  **所以迭代器才是通用的方式**
+
+## string 增容
+
+#### 测试代码
+
+```c++
+void TestPushBack()
+{
+	string s;
+	//s.reserve(1000);//申请至少能存储10000个字符的空间  不一定是1000 要空间对其
+
+	size_t sz = s.capacity();
+	cout << "capacity changed: " << sz << '\n';
+	cout << "making s grow:\n";
+	for (int i = 0; i < 2000; ++i)
+	{
+		s.push_back('c');
+		if (sz != s.capacity())
+		{
+			sz = s.capacity();
+			cout << "capacity changed: " << sz << '\n';
+		}
+	}
+}
+```
+
+##### 结果
+
+```c++
+capacity changed: 15	//本质是16 但是没算\0  有效字符位置有15个
+making s grow:
+capacity changed: 31	//本质是32 但是没算\0  有效字符位置有31个
+capacity changed: 47
+capacity changed: 70
+capacity changed: 105
+capacity changed: 157
+capacity changed: 235
+```
 
