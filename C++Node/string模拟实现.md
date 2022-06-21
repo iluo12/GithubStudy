@@ -375,4 +375,227 @@ capacity changed: 157
 capacity changed: 235
 ```
 
- string
+### [**reserve**](https://m.cplusplus.com/reference/string/string/reserve/)**：扩容，只开空间**
+
+### [**resize**](https://m.cplusplus.com/reference/string/string/resize/)**：扩容+初始化**
+
+**开空间，并给初始值 进行初始化**
+
+如果resize扩容比已有数据少，则会删除多余数据
+
+```c++
+void test_string3()
+{
+	string s1;
+	s1.reserve(100);
+	//开空间并初始化
+	string s2;
+	//s2.resize(100); // 初始化的 \0
+	s2.resize(100,'x');//指定字符初始化
+	//resize不会把已有数据覆盖初始化，如果比已有数据小，则会除多余的数据
+}
+```
+
+## string 查找
+
+### [**c_str**](https://m.cplusplus.com/reference/string/string/c_str/)：**返回C格式字符串**
+
+```c++
+const char* c_str() const;
+```
+
+```c++
+void test_string4()
+{
+	string s("hello world");
+	cout << s << endl;//流插入  size是多少 打印多少
+	cout << s.c_str() << endl;//const char*  遇到\0结束
+    
+    //应用场景 这里fopen的第一个参数需要const char*类型的字符串
+    string file("test.txt");
+	FILE* fout = fopen(file.c_str(), "w");
+}
+```
+
+[**find**](https://m.cplusplus.com/reference/string/string/find/)：找位置
+
+：**从字符串pos位置开始往后找字符c，返回该字符在字符串中的位置**
+
+|    string (1) | `size_t find (const string& str, size_t pos = 0) const; `   |
+| ------------: | ----------------------------------------------------------- |
+|  c-string (2) | `size_t find (const char* s, size_t pos = 0) const; `       |
+|    buffer (3) | `size_t find (const char* s, size_t pos, size_t n) const; ` |
+| character (4) | `size_t find (char c, size_t pos = 0) const;`               |
+
+### [**npos**](https://m.cplusplus.com/reference/string/string/npos/)：-1
+
+：**size_t类型的 -1 一个很大的数**
+
+### [**substr**](https://m.cplusplus.com/reference/string/string/substr/)：查找字符串
+
+：**在str中从pos位置开始，截取n个字符，然后将其返回**
+
+```c++
+string substr (size_t pos = 0, size_t len = npos) const;
+```
+
+```c++
+string file("test.txt");
+FILE* fout = fopen(file.c_str(), "w");
+size_t pos = file.find('.');
+if (pos != string::npos)//npos是 -1  size_t全1
+{
+    //string suffix = file.substr(pos, file.size() - pos);
+    string suffix = file.substr(pos);//直接用默认缺省值 取到最后
+    cout << suffix << endl;
+}
+```
+
+**如果是连续后缀 ，要从右往左找**
+
+### [**rfind**](https://m.cplusplus.com/reference/string/string/rfind/)：**反向找**
+
+```c++
+	string file("test.txt.zip");
+	FILE* fout = fopen(file.c_str(), "w");
+	size_t pos = file.rfind('.');//这里用rfind
+	if (pos != string::npos)
+	{
+		string suffix = file.substr(pos);
+		cout << suffix << endl;
+	}
+}
+```
+
+- **解析URL**
+
+  ```c++
+  	string url("https://m.cplusplus.com/reference/string/string/rfind/");
+  	//取协议
+  	size_t pos1 = url.find(':');
+  	string protocol = url.substr(0, pos1 - 0);
+  	cout << protocol << endl;
+  	//取域名
+  	size_t pos2 = url.find('/',pos1+3);//冒号+3是w的位置开始找/ 
+  	string domain = url.substr(pos1 + 3,pos2-(pos1+3));
+  	cout << domain << endl;
+  	//取路径
+  	string uri = url.substr(pos2 + 1);//从域名后的/ +1 的位置找到最后
+  	cout << uri << endl;
+  
+  https
+  m.cplusplus.com
+  reference/string/string/rfind/
+  ```
+
+## string 插入删除
+
+### [**insert**](https://m.cplusplus.com/reference/string/string/insert/)：**插入**
+
+|           string (1)** | ` string& insert (size_t pos, const string& str); `          |
+| ---------------------: | ------------------------------------------------------------ |
+|          substring (2) | ` string& insert (size_t pos, const string& str, size_t subpos, size_t sublen); ` |
+|           c-string (3) | ` string& insert (size_t pos, const char* s); `              |
+|             buffer (4) | ` string& insert (size_t pos, const char* s, size_t n); `    |
+|             fill (5)** | ` string& insert (size_t pos, size_t n, char c);    void insert (iterator p, size_t n, char c); ` |
+| single character (6)** | `iterator insert (iterator p, char c); `                     |
+|              range (7) | `template <class InputIterator>   void insert (iterator p, InputIterator first, InputIterator last);` |
+
+```c++
+void test_string5()
+{
+	string s("hello world");
+	s += ' ';//尾插
+	s += "!!!";
+	cout << endl;
+	//头插 效率低 O(N) 尽量少用
+	s.insert(0, 1, 'x');//在0的位置插入1个x
+	s.insert(s.begin(), 'y');//在头部插入y
+	s.insert(0, "test");//在0的位置插入test
+	cout << s << endl;
+	//中间位置插入，尽量少用
+	s.insert(4, "&&&&&&");
+	cout << s << endl;
+}
+```
+
+
+
+### [**erase**](https://m.cplusplus.com/reference/string/string/erase/)：**删除**
+
+| sequence (1)** | ` string& erase (size_t pos = 0, size_t len = npos); ` |
+| -------------: | ------------------------------------------------------ |
+|  character (2) | `iterator erase (iterator p); `                        |
+|      range (3) | `     iterator erase (iterator first, iterator last);` |
+
+```c++
+void test_string6()
+{
+	string s("hello world");
+	//尽量少用头部和中间的删除，效率低
+	s.erase(0,1);//删除头上的一个字符
+	s.erase(s.size()-1,1);//删除尾部的一个字符
+	cout << s << endl;
+    s.erase(3);//从第三个位置 后面全部删除
+	cout << s << endl;
+}
+```
+
+### [**operator+**](https://m.cplusplus.com/reference/string/string/operator+/)：**加**
+
+## [**relational operators**](https://m.cplusplus.com/reference/string/string/operators/)：**比较大小**
+
+## [**getline**](https://m.cplusplus.com/reference/string/string/getline/)：**连续获取一行字符串**
+
+**方法一的代码就是getline的原理，一个字符一个字符的获取！**
+
+|  (1) | `istream& getline (istream& is, string& str, char delim); ` |
+| ---: | ----------------------------------------------------------- |
+|  (2) | `istream& getline (istream& is, string& str);`              |
+
+[字符串里面最后一个单词的长度](https://www.nowcoder.com/practice/8c949ea5f36f422594b306a2300315da?tpId=37&&tqId=21224&rp=5&ru=/activity/oj&qru=/ta/huawei/question-ranking)
+
+```c++
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    string s;
+    //cin>>s;//cin读到空格或换行结束 scanf同理
+    //方法一：一个字符一个字符拿
+//     char ch = getchar();
+//     //char ch = cin.get();
+//     while(ch!='\n')
+//     {
+//         s+=ch;
+//         ch = getchar();
+//     }
+    //方式二：
+    getline(cin,s);
+    
+    size_t pos = s.rfind(' ');
+    if(pos == string::npos)
+    {
+        cout <<s.size()<<endl;
+    }
+    else{
+        cout << s.size() - pos-1;
+    }
+    return 0;    
+}
+```
+
+
+
+
+
+
+
+## 开区间取值
+
+0 - 9 的下标是10个有效字符
+
+所以算有效字符是size - 0  (size是最后一个字符的下一个)
+
+如果用最后一个字符减0 则有效字符会少一个
