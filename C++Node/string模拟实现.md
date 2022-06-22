@@ -543,7 +543,7 @@ void test_string6()
 
 ### [**operator+**](https://m.cplusplus.com/reference/string/string/operator+/)：**加**
 
-## [**relational operators**](https://m.cplusplus.com/reference/string/string/operators/)：**比较大小**
+## 
 
 ## [**getline**](https://m.cplusplus.com/reference/string/string/getline/)：**连续获取一行字符串**
 
@@ -586,11 +586,191 @@ int main()
 }
 ```
 
+## string 比较大小
+
+[**relational operators**](https://m.cplusplus.com/reference/string/string/operators/)：**比较大小**
+
+|  (1) | `bool operator== (const string& lhs, const string& rhs); bool operator== (const char*   lhs, const string& rhs); bool operator== (const string& lhs, const char*   rhs); ` |
+| ---: | ------------------------------------------------------------ |
+|  (2) | `bool operator!= (const string& lhs, const string& rhs); bool operator!= (const char*   lhs, const string& rhs); bool operator!= (const string& lhs, const char*   rhs); ` |
+|  (3) | `bool operator<  (const string& lhs, const string& rhs); bool operator<  (const char*   lhs, const string& rhs); bool operator<  (const string& lhs, const char*   rhs); ` |
+|  (4) | `bool operator<= (const string& lhs, const string& rhs); bool operator<= (const char*   lhs, const string& rhs); bool operator<= (const string& lhs, const char*   rhs); ` |
+|  (5) | `bool operator>  (const string& lhs, const string& rhs); bool operator>  (const char*   lhs, const string& rhs); bool operator>  (const string& lhs, const char*   rhs); ` |
+|  (6) | `bool operator>= (const string& lhs, const string& rhs); bool operator>= (const char*   lhs, const string& rhs); bool operator>= (const string& lhs, const char*   rhs);` |
+
+```c++
+void test_string7()
+{
+	string s1("hello world");
+	string s2("string");
+	const char* ps = "char";
+
+	cout << (s1 < s2) << endl;//1
+	cout << (s1 < ps) << endl;//0
+	cout << ("hhh" < s2) << endl;//1
+	cout << (s1 < "sss") << endl;//1
+}
+```
+
+## C++11 补充
+
+### [**stoi** ](https://cplusplus.com/reference/string/stoi/)：str转int
+
+```c+
+int stoi (const string&  str, size_t* idx = 0, int base = 10);
+int stoi (const wstring& str, size_t* idx = 0, int base = 10);
+```
+
+```c+
+	int val = stoi("1234");
+	cout << val << endl;
+```
+
+- [**stoi** ](https://cplusplus.com/reference/string/stoi/)
+
+- [**stol** ](https://cplusplus.com/reference/string/stol/)
+
+- [**stoul** ](https://cplusplus.com/reference/string/stoul/)
+
+- [**stoull** ](https://cplusplus.com/reference/string/stoull/)[**stof** ](https://cplusplus.com/reference/string/stof/)
+
+- [**stod** ](https://cplusplus.com/reference/string/stod/)
+
+- [**stold** ](https://cplusplus.com/reference/string/stold/)
+
+### [**to_string** ](https://cplusplus.com/reference/string/to_string/)：int 转 str
+
+```c++
+string to_string (int val);
+string to_string (long val);
+string to_string (long long val);
+string to_string (unsigned val);
+string to_string (unsigned long val);
+string to_string (unsigned long long val);
+string to_string (float val);
+string to_string (double val);
+string to_string (long double val);
+```
+
+```c++
+	string str = to_string(3.14);
+	cout << str << endl;//3.140000
+```
+
+## 练习题
+
+### [125. 验证回文串](https://leetcode.cn/problems/valid-palindrome/)
+
+```c++
+class Solution {
+public:
+    bool isLeterOrNumber(char ch)
+    {
+        if(ch>='0' && ch<='9')
+            return true;
+        if(ch>= 'a' && ch<='z')
+            return true;
+        
+        if(ch>='A' && ch<= 'Z')
+            return true;
+        return false;
+    }
+    bool isPalindrome(string s) {
+        int begin = 0,end = s.size()-1;
+        while(begin<end)
+        {
+            while(begin<end && !isLeterOrNumber(s[begin]))
+                ++begin;
+            while(begin<end && !isLeterOrNumber(s[end]))
+                --end;
+
+            if(tolower(s[begin]) != tolower(s[end]))            
+                return false;
+            ++begin;
+            --end;
+        }
+        return true;
+    }
+};
+```
 
 
 
+### [415. 字符串相加](https://leetcode.cn/problems/add-strings/)
 
+> ![image-20220621230055358](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/image/202206212301448.png)
 
+```c++
+class Solution {
+public:
+    string addStrings(string num1, string num2) {
+        int end1 = num1.size()-1;int end2 = num2.size()-1;
+        int next = 0;//计算进位
+        string retStr;
+        while(end1>=0 || end2>=0)
+        {
+            
+            int X1 = 0;
+            if(end1>=0)
+            {
+                X1 = num1[end1]-'0';
+                --end1;
+            } 
+            int X2 = 0;
+            if(end2>=0)
+            {
+                X2 = num2[end2]-'0';
+                --end2;
+            }
+            int retVal = X1 + X2 + next;
+
+            if(retVal > 9)
+            {
+                next = 1;
+                retVal -= 10;
+            }
+            else
+            {
+                next = 0;
+            }
+            
+            retStr += retVal+'0';
+
+        } 
+        if(next == 1)
+        {
+            retStr += '1';
+        }
+        reverse(retStr.begin(),retStr.end());
+        return retStr;
+    }
+};
+```
+
+## 两个swap的区别？
+
+### [**string::swap**](https://cplusplus.com/reference/string/string/swap/)：string专属
+
+```c++
+void swap (string& str);
+```
+
+### [std::swap](https://cplusplus.com/reference/utility/swap/?kw=swap)：全局
+
+适用于内置类型
+
+```c++
+template <class T> void swap ( T& a, T& b )
+{
+  T c(a); a=b; b=c;
+}
+```
+
+### 区别：
+
+`string::swap` 效率高，只交换资源，改变指针的指向
+
+`std::swap` 会拷贝构造c (深拷贝1)、a=b(深拷贝2)、b=c(深拷贝3) 进行三次string的深拷贝，代价极高
 
 ## 开区间取值
 
@@ -598,4 +778,3 @@ int main()
 
 所以算有效字符是size - 0  (size是最后一个字符的下一个)
 
-如果用最后一个字符减0 则有效字符会少一个
