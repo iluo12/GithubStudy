@@ -477,7 +477,7 @@ if (pos != string::npos)//npos是 -1  size_t全1
 - **解析URL**
 
   ```c++
-  	string url("https://m.cplusplus.com/reference/string/string/rfind/");
+  	string url("https://www.cplusplus.com/reference/string/string/rfind/");
   	//取协议
   	size_t pos1 = url.find(':');
   	string protocol = url.substr(0, pos1 - 0);
@@ -491,7 +491,7 @@ if (pos != string::npos)//npos是 -1  size_t全1
   	cout << uri << endl;
   
   https
-  m.cplusplus.com
+  www.cplusplus.com
   reference/string/string/rfind/
   ```
 
@@ -550,7 +550,33 @@ void test_string6()
 
 ### [**operator+**](https://m.cplusplus.com/reference/string/string/operator+/)：**加**
 
-## 
+字符串相加，返回新的字符串
+
+```c++
+// concatenating strings
+#include <iostream>
+#include <string>
+
+main ()
+{
+  std::string firstlevel ("com");
+  std::string secondlevel ("cplusplus");
+  std::string scheme ("http://");
+  std::string hostname;
+  std::string url;
+
+  hostname = "www." + secondlevel + '.' + firstlevel;
+  url = scheme + hostname;
+
+  std::cout << url << '\n';
+
+  return 0;
+}
+
+输出：http://www.cplusplus.com
+```
+
+
 
 ## [**getline**](https://m.cplusplus.com/reference/string/string/getline/)：**连续获取一行字符串**
 
@@ -775,9 +801,9 @@ template <class T> void swap ( T& a, T& b )
 
 ### 区别：
 
-`string::swap` 效率高，只交换资源，改变指针的指向
+`string::swap` 对于string效率高，只交换资源，改变指针的指向
 
-`std::swap` 会拷贝构造c (深拷贝1)、a=b(深拷贝2)、b=c(深拷贝3) 进行三次string的深拷贝，代价极高
+`std::swap` 对于string会拷贝构造c (深拷贝1)、a=b(深拷贝2)、b=c(深拷贝3) 进行三次string的深拷贝，代价极高
 
 ## 浅拷贝问题
 
@@ -785,7 +811,7 @@ template <class T> void swap ( T& a, T& b )
 
 2.期中一个对象进行修改会影响另一个
 
-### 引用计数
+### 引用计数(解决浅拷贝)
 
 > 如果对象不修改，则只增加了引用计数，不进行深拷贝，提高了效率
 >
