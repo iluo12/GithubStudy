@@ -437,7 +437,7 @@ void append(const char* str)
 
 查找第一次出现的字符
 
-当指定*pos*时，搜索仅包括位置*pos*或之后的字符
+当指定*pos*时，搜索仅包括位置*pos*或之后的字符，返回该字符串的下标
 
 ```c++
 class luo
@@ -479,6 +479,23 @@ private:
 
 const size_t string::npos = -1;
 ```
+
+测试返回的位置
+
+```c++
+int main()
+{
+	//luo::test_string1();
+	string s1("abcdef");
+	size_t pos = s1.find('c');
+	cout << pos << endl;  //pos == 2
+	return 0;
+}
+```
+
+> 
+>
+> <img src="https://picgo-1311604203.cos.ap-beijing.myqcloud.com/image/202206260943904.png"/>
 
 #### 🌸strstr
 
