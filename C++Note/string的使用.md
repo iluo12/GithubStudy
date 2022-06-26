@@ -19,7 +19,7 @@ void Swap(T& x1, T& x2) //函数参数列表 - 参数对象
 }
 传入不同的类型 会调用不同的实例化函数
 多个类型：
-    template<class T1,class>
+    template<class T1,class T2>
 ```
 
 #### 模板实例化
@@ -158,7 +158,7 @@ gbk - 中文编码表
 
   
 
-- [**at**](https://m.cplusplus.com/reference/string/string/at/)：出错抛异常
+- [**at**](https://m.cplusplus.com/reference/string/string/at/)：获取字符串的字符，出错抛异常
 
   Get character in string (public member function)
 
@@ -173,11 +173,11 @@ gbk - 中文编码表
   cout << s1 << endl;
   ```
 
-- [**append**](https://m.cplusplus.com/reference/string/string/append/)：插入字符串 不常用
+- [**append**](https://m.cplusplus.com/reference/string/string/append/)：尾插字符串 不常用
 
   Append to string (public member function)
 
-- [**push_back**](https://m.cplusplus.com/reference/string/string/push_back/)：插入字符串 不常用
+- [**push_back**](https://m.cplusplus.com/reference/string/string/push_back/)：尾插字符 不常用
 
   Append character to string (public member function)
 
@@ -212,7 +212,10 @@ cout << s1 << endl;
 ### end()/begin()
 
 ```c++
-      iterator begin();
+typedef char*iterator;
+typedef const char*const_iterator;
+
+		iterator begin();
 const_iterator begin() const;
 
       iterator end();
@@ -381,7 +384,9 @@ capacity changed: 235
 
 **开空间，并给初始值 进行初始化**
 
-如果resize扩容比已有数据少，则会删除多余数据
+如果resize扩容比已有数据少，则会删除多余数据，不会改变空间大小
+
+reverse也不会缩容
 
 ```c++
 void test_string3()
@@ -419,13 +424,15 @@ void test_string4()
 
 [**find**](https://m.cplusplus.com/reference/string/string/find/)：找位置
 
-：**从字符串pos位置开始往后找字符c，返回该字符在字符串中的位置**
+：**从字符串pos位置开始往后找字符c，返回该字符在字符串中的下标**
 
 |    string (1) | `size_t find (const string& str, size_t pos = 0) const; `   |
 | ------------: | ----------------------------------------------------------- |
 |  c-string (2) | `size_t find (const char* s, size_t pos = 0) const; `       |
 |    buffer (3) | `size_t find (const char* s, size_t pos, size_t n) const; ` |
 | character (4) | `size_t find (char c, size_t pos = 0) const;`               |
+
+> ![image-20220626094342788](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/image/202206260943904.png)
 
 ### [**npos**](https://m.cplusplus.com/reference/string/string/npos/)：-1
 
@@ -771,6 +778,32 @@ template <class T> void swap ( T& a, T& b )
 `string::swap` 效率高，只交换资源，改变指针的指向
 
 `std::swap` 会拷贝构造c (深拷贝1)、a=b(深拷贝2)、b=c(深拷贝3) 进行三次string的深拷贝，代价极高
+
+## 浅拷贝问题
+
+1.浅拷贝会析构两次
+
+2.期中一个对象进行修改会影响另一个
+
+### 引用计数
+
+> 如果对象不修改，则只增加了引用计数，不进行深拷贝，提高了效率
+>
+> 缺陷：引用计数存在线程安全问题，需要加锁，在多线程环境下要付出代价，在动态库、静态库中有些场景也会存在问题
+
+当一块空间有多个指针指向，则会增加引用计数，例如2个指针指向 ，则引用计数是2
+
+当指针析构的时候，引用计数不是1 则 会减减引用计数，直到只有一个指针的时候才析构
+
+​		也就是说10指针指向a，前9个指着都不会析构a空间，只会减减引用计数，只有最后一个指针会析构a空间
+
+### 写时拷贝
+
+> insert/+=/erase等函数中，先查看引用计数，如果引用计数不是1，要先进性深拷贝，再去修改
+
+当引用计数不是1 ，则进行写实拷贝，因为这块空间不是一个指针维护，所以不能修改
+
+
 
 ## 开区间取值
 
