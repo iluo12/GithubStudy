@@ -320,7 +320,7 @@ void resize(size_t n,char ch = '\0')
 }
 ```
 
-#### 🌸memset
+#### 🌼memset
 
 ```
 void * memset ( void * ptr, int value, size_t num );
@@ -378,7 +378,7 @@ string& insert(size_t pos, const char* s)
 }
 ```
 
-#### 🌸strncpy
+#### 🌼strncpy
 
 ```
 char * strncpy ( char * 目标, const char * 源, size_t num );
@@ -497,7 +497,7 @@ int main()
 >
 > <img src="https://picgo-1311604203.cos.ap-beijing.myqcloud.com/image/202206260943904.png"/>
 
-#### 🌸strstr
+#### 🌼strstr
 
 ```
 const char * strstr ( const char * str1, const char * str2 );
@@ -530,7 +530,23 @@ string& erase(size_t pos = 0, size_t len = npos)
 }
 ```
 
+#### 🌼strcmp
 
+```
+int strcmp ( const char * str1, const char * str2 );
+```
+
+比较两个字符串
+
+将 C 字符串*str1*与 C 字符串*str2*进行比较。
+
+返回一个整数值，表示字符串之间的关系：
+
+| 返回值 | 表示                                               |
+| ------ | -------------------------------------------------- |
+| `<0`   | 第一个不匹配的字符在*ptr1*中的值低于在*ptr2中的值* |
+| `0`    | 两个字符串的内容相等                               |
+| `>0`   | 第一个不匹配的字符在*ptr1*中的值大于在*ptr2中的值* |
 
 ### 💜赋值函数
 
