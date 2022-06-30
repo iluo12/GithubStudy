@@ -4,6 +4,8 @@
 
 **[vector的文档介绍](https://cplusplus.com/reference/vector/vector/)**
 
+> ![image-20220630083834744](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220630083834744.png)
+
 可改变size的顺序表！
 
 ### [118.杨辉三角](https://leetcode.cn/problems/pascals-triangle/submissions/)
@@ -96,4 +98,25 @@ public:
 当没有构造函数，只有析构函数，对象出了这一行会直接析构，程序结束后 也可能再次调用析构函数。
 
 当构造、析构函数同时存在，对象出了这一行则不会析构，直到出了当前函数作用域，才会析构。
+
+### swap
+
+`sawp(v1,v3)` 3个深拷贝
+
+`v1.swap(v3)` 仅交换成员变量指针 
+
+### 迭代器分类
+
+| 类型                   | 中文名     | 特点                | 迭代器                                                       | 参数是迭代器的对象                                           | 可传参数                 |
+| ---------------------- | ---------- | ------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------ |
+| iterator               | 迭代器     |                     | 查看类的迭代器类型，<br />看iterator的类型                   |                                                              |                          |
+| input_iterator         | 只写迭代器 |                     | 没有实际对应的类型                                           |                                                              | 单向<br />双向<br />随机 |
+| output_iterator        | 只读迭代器 |                     | 没有实际对应的类型                                           |                                                              |                          |
+| forwad_iterator        | 单向迭代器 | 只能++              | [**<forward_list>** ](https://cplusplus.com/reference/forward_list/forward_list/)<br />[**<unordered_set>** ](https://cplusplus.com/reference/unordered_set/)<br />[**<unordered_map>** ](https://cplusplus.com/reference/unordered_map/) |                                                              |                          |
+| bidirectional_iterator | 双向迭代器 | ++ / --             | [**< list>**](https://cplusplus.com/reference/list/)<br />[**< map>**](https://cplusplus.com/reference/map/)<br />[**< set>**](https://cplusplus.com/reference/set/) | [**< reverse>**](https://cplusplus.com/reference/algorithm/reverse/?kw=reverse) | 随机<br />双向           |
+| randomaccess_iterator  | 随机迭代器 | ++ /-- <br /> + / - | [**< deque>**](https://cplusplus.com/reference/deque/)<br />[**< vector>**](https://cplusplus.com/reference/vector/)<br />[**< string>**](https://cplusplus.com/reference/string/string/?kw=string)<br /> | [**< sort>**](https://cplusplus.com/reference/algorithm/sort/?kw=sort) | 随机                     |
+
+查看迭代器类型
+
+> ![image-20220630092300979](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220630092300979.png)
 
