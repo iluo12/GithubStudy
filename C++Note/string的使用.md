@@ -87,9 +87,12 @@ int main()
 **S标准T模板L库**
 Vue - 前端贡献：尤雨溪
 
-#### 书籍推荐 
+### 书籍推荐 
 
 《STL源码剖析》《effcrive C++》 继承多态学完看 《高质量C++》现在看
+
+### STL 六大组件
+算法、容器、迭代器、配接器、仿函数、空间配置器(内存池)
 
 ## string 成员函数
 
@@ -242,7 +245,7 @@ while (it != s1.end())
 cout << endl;
 ```
 
-#### iterator begin();
+### iterator begin();
 
 范围for会替换成迭代器
 
@@ -262,7 +265,7 @@ for (auto e:s1)
 cout << endl;
 ```
 
-#### const_iterator begin() const;
+### const_iterator begin() const;
 
 const 版本只能读取 不能修改
 
@@ -342,7 +345,7 @@ void test_string2()
 
 ## string 增容
 
-#### 测试代码
+### 测试代码
 
 ```c++
 void TestPushBack()
@@ -365,7 +368,7 @@ void TestPushBack()
 }
 ```
 
-##### 结果
+结果
 
 ```c++
 capacity changed: 15	//本质是16 但是没算\0  有效字符位置有15个
@@ -836,4 +839,22 @@ template <class T> void swap ( T& a, T& b )
 0 - 9 的下标是10个有效字符
 
 所以算有效字符是size - 0  (size是最后一个字符的下一个)
+
+## string 补充:vs下
+
+```
+class string
+{
+private:
+	char _Buf[16];	//字符长度小于16，就存在这个数组_Buf中
+	char* _Ptr; 	//大于等于16，就会去堆上申请,存在_Ptr中
+	size_t _mySize;
+	size_t _myRes;
+}
+sizeof()  //28字节
+```
+
+> ![image-20220701114058992](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220701114058992.png)
+
+> ![image-20220701114159833](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220701114159833.png)
 
