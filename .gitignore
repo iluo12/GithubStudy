@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+#屏蔽VS目录文件
+.vs
+Debug
+Release
+x64
+#屏蔽VS工程文件
+*.sln
+*.vcxproj
+*.filters
+*.user
