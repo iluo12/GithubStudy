@@ -82,6 +82,154 @@ int main()
 }
 ```
 
+
+
+### 函数模板
+
+
+
+```c++
+//定义参数类型 T - Type
+template<class T>  //template<typename T> 
+void Swap(T& x1,T& x2)
+{
+	T x = x1;
+	x1 = x2;
+	x2 = x;
+}
+//多个类型
+template<class T1，class T2>
+
+```
+
+#### 函数模板实例化
+
+将不同类型，替换到函数中，实例出一个新的固定类型的函数，然后进行调用！
+
+#### 显示实例化
+
+```c++
+int a = 10;
+double b = 20.2;
+Add<int>(a1,d2);//指定类型
+```
+
+1.函数模板和普通模板都实现，优先普通模板
+
+> 当普通函数只有声明，没有定义时，会报错
+
+```c++
+viod swap(int a,int b);
+template<class T>
+void swap(T a,T b)
+{}
+int main()
+{
+	int a = 10, b = 20;
+	swap(a,b);
+}//此时 会优先调用 普通函数，但是会报错，因为普通函数只有声明，没有定义！
+```
+
+2.可以通过空模板参数列表强制调用函数模板
+
+```c++
+myswap<>(a,b);
+```
+
+3.函数模板可以重载
+
+```c++
+template<class T>
+viod swap(T a,T b)
+{}
+template<class T>
+void swap(T a,T b,T c)
+{}
+```
+
+4.如果函数模板可以产生更好的匹配，有限调用函数模板
+
+```c++
+viod swap(int a,int b)
+{}
+template<class T>
+void swap(T a,T b)
+{}
+int main()
+{
+	char a = 'a';
+	char b = 'b';
+	swap(a,b);//此时会调用函数 函数模板，因为普通函数还要隐式类型转换
+}
+```
+
+
+
+### 类型模板
+
+使用 
+
+函数模板与类型模板的区别
+
+1.函数模板可以推导类型，类型模板不能自动推导
+
+```c++
+template<class T1,class T2>
+class Person
+{
+public:
+    Person(T1 name,T2 age)
+	{
+		_name = name;
+		_age = age;
+	}
+	T1 _name;
+	T2 _age;
+};
+int main(){
+	Person<string,int> p1("张三"，23);//只能显示指定类型，不能自动推导
+    //Preson p("张三"，23);
+}
+```
+
+2.类型模板可以写默认参数，函数模板不行！
+
+```c++
+template<class T1,class T2 = int>//缺省值
+class Person
+{
+public:
+    Person(T1 name,T2 age)
+	{
+		_name = name;
+		_age = age;
+	}
+	T1 _name;
+	T2 _age;
+};
+int main(){
+	Person<string> p1("张三",23);
+}
+```
+
+#### 类模板什么时候创建？
+
+在调用的时候才会创建，不调用则编译的时候也不会创建，也不会出错。
+
+#### 类名和类型
+
+```
+//Person 类名
+//Person<T> 类型
+template<class T>
+class Person
+{
+
+}
+```
+
+
+
 ## STL:
 
 **S标准T模板L库**
