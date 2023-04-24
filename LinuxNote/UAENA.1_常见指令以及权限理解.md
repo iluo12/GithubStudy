@@ -89,7 +89,7 @@ cat test1.c 正序查看文本
 tac test1.c 逆序查看文本
 -n ：带行号查看
 ##### more 查看不打开 下翻
--5： 查看5行内容
+-5： 查看5行内容注释
 q：退出
 /100 ：查看100的位置
 ##### less 查看不打开 上下翻
@@ -105,9 +105,47 @@ echo "hello linux" > log.txt 输出重定向 文件不存在，自动创建
 &emsp;&emsp;输出重定向 会清空原始内容 重新写入
 &emsp;&emsp;追加重定向 需要写两个>
 &emsp;&emsp;&emsp;&emsp;echo "AAAAAAAAAAAAAA" >> log.txt
+
+![image-20230405110334062](C:\Users\uaena\AppData\Roaming\Typora\typora-user-images\image-20230405110334062.png)
+
 ### cat
 cat < log.txt :输入重定向
 ctrl+d 退出
+
+cat -n ：显示行数
+
+### wc
+
+wc -l mylog.txt
+
+显示文本行数
+
+### more
+
+查看文件从第一行看，只能回车向下看
+
+### less
+
+查看文件  可以搜索 能上下键翻阅
+
+/ 能搜索
+
+### head
+
+head mylog.txt
+
+默认显示10行
+
+-5  显示5行
+
+### tail
+
+显示末尾10行
+
+可以- 行
+
+
+
 ### 查看文件的 100-120行
 1.head -120 file.txt > temp.txt
 &emsp;tail -20 temp.txt
@@ -121,17 +159,102 @@ ctrl+d 退出
 默认时间 1970.1.1_0:0:0 
 对应的北京时间1970.1.1_8:0:0
 
+```c
+[wx@VM-16-12-centos lesson3]$ date +%Y-$m-%d
+2023--05
+[wx@VM-16-12-centos lesson3]$ date +%Y-%m-%d
+2023-04-05
+[wx@VM-16-12-centos lesson3]$ date +%Y-%m-%d_%H:%M:%S
+2023-04-05_10:09:12
+[wx@VM-16-12-centos lesson3]$ date +%Y-%m-%d/%H:%M:%S
+2023-04-05/10:09:31
+[wx@VM-16-12-centos lesson3]$ date +%s
+1680660646
+[wx@VM-16-12-centos lesson3]$ date +%s
+1680660650
+[wx@VM-16-12-centos lesson3]$ date +%s
+1680660827
+[wx@VM-16-12-centos lesson3]$ date -d @1680660827
+Wed Apr  5 10:13:47 CST 2023
+[wx@VM-16-12-centos lesson3]$ date -d @1680660827 | +%Y-%m-%d/%H:%M:%S-bash: +%Y-%m-%d/%H:%M:%S: No such file or directory
+[wx@VM-16-12-centos lesson3]$ date -d @1680660827 +%Y-%m-%d/%H:%M:%S
+2023-04-05/10:13:47
+[wx@VM-16-12-centos lesson3]$ date -d @0 +%Y-%m-%d/%H:%M:%S
+1970-01-01/08:00:00
+[wx@VM-16-12-centos lesson3]$ 
+
+```
+
+时间戳起始时间是1970.1.1   0时:0分:0秒
+
+为什么我们显示的是 8：00？   因为“格林威治” 是英国0:00就是中国北京的8:00
+
+### sort
+
+对文本可以排序
+
+sort my.txt  升序
+
+-r 降序
+
+### uniq
+
+文本去重
+
+sort my.txt | uniq
+
 ### cal 显示日历
 cal 显示当月日历
 cal 2022 显示整年日历
 cal -3 显示前中后月
+
 ### find
 find /home/wx/ -name test1.c 
 find 路径 -name 文件名 
+
+~ 当前工作路径 /home/wx
+
+### which
+
+which ls
+
+查看指令的路径
+
+```c
+[wx@VM-16-12-centos lesson3]$ which ls
+alias ls='ls --color=auto'
+	/usr/bin/ls
+[wx@VM-16-12-centos lesson3]$ which pwd
+/usr/bin/pwd
+[wx@VM-16-12-centos lesson3]$ which which
+alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
+	/usr/bin/alias
+	/usr/bin/which
+[wx@VM-16-12-centos lesson3]$ which clear
+/usr/bin/clear
+
+```
+
+### whereis
+
+查找命令的文件
+
+```c
+[wx@VM-16-12-centos lesson3]$ whereis my
+my: /etc/my.cnf
+[wx@VM-16-12-centos lesson3]$ whereis ls
+ls: /usr/bin/ls /usr/share/man/man1/ls.1.gz /usr/share/man/man1p/ls.1p.gz
+[wx@VM-16-12-centos lesson3]$ 
+
+```
+
+
+
 ### grep
 grep选项中，-E选项可以用来扩展选项为正则表达式；
   $表示匹配文件末尾，字符需要在$之前表示以字符结尾  a$表示以a结尾
 ^表示匹配文件起始，字符需要在 ^ 之后表示以字符起始  ^a表示以a起始
+
 ```c
 cat file.txt | grep '99' 过滤带99的数字
 grep '99' file.txt 效果同上
@@ -153,7 +276,54 @@ hello 994
 hello 995
 grep -i '^h' file.txt 查找h开头的
 ```
+```c
+//查找aaa
+[wx@VM-16-12-centos lesson3]$ grep 'aaa' my.txt 
+aaaaa
+//查找 -i 不区分大小写
+[wx@VM-16-12-centos lesson3]$ grep 'aaa' my.txt -i
+aaaaa
+AAAAA
+// -v反向查找
+[wx@VM-16-12-centos lesson3]$ grep 'aaa' my.txt -v
+AAAAA
+bbbbbb
+cccccccccc
+dddddd
+eeeeee
+BBBB
+CCCC
+DDDDDD
+FFFFF
+// -iv 查找不带有 aaa不区分大小写 的
+[wx@VM-16-12-centos lesson3]$ grep 'aaa' my.txt -iv
+bbbbbb
+cccccccccc
+dddddd
+eeeeee
+BBBB
+CCCC
+DDDDDD
+FFFFF
+// 显示行号
+[wx@VM-16-12-centos lesson3]$ grep 'aaa' my.txt -ivn
+3:bbbbbb
+4:cccccccccc
+5:dddddd
+6:eeeeee
+7:BBBB
+8:CCCC
+9:DDDDDD
+10:FFFFF
+[wx@VM-16-12-centos lesson3]$ grep 'aaa' my.txt -in
+1:aaaaa
+2:AAAAA
+```
+
+
+
 ### zip
+
 压缩：zip -r code.zip lesson3
 解压：unzip code.zip
 解压到tmp目录： unzip test2.zip -d /tmp
@@ -167,6 +337,12 @@ x ：解压
 tar xzvf lesson3.tgz 
 -C ：解压到指定目录
 tar xzf lesson3.tgz -C test/
+
+czf 压缩
+
+xzf 解压
+
+ztvf 查看
 
 ### 打包vs压缩
 打包是放在一起
@@ -193,6 +369,19 @@ ctrl + c  退出
 history   历史命令
 tab 补全 和查找
 file name.c 查看文件信息
+
+### bc
+
+计算器
+
+quit退出
+
+echo "1+2+3+4+5+6" |bc
+
+计算结果
+
+
+
 ### 关机 云服务器永远不用关机
 语法： shutdown [选项] ** 常见选项： **
 -h ： 将系统的服务停掉后，立即关机。
@@ -207,7 +396,14 @@ ps axj | grep bash 查看进程
 ### sudo
 临时提升用户权限
 
+ctrl +r 查询历史命令   左右键选择
+
+###   history
+
+查看所有命令
+
 ### 文件属性
+```
 [wx@VM-16-12-centos lesson3]$ ll
 total 16
 -rw-r--r-- 1 wx wx   10 Apr 29 17:43 file1
@@ -216,27 +412,68 @@ total 16
 -rw-r--r-- 1 wx wx    0 Apr 29 17:42 file4
 -rw-rw-r-- 1 wx wx 9921 Apr 29 17:30 file.txt
 -rw-rw-r-- 1 wx wx    0 Apr 29 22:01 wx.txt
-wx wx ：拥有者 所属组 
-0 Apr 29 22:01 wx.txt ： 大小  日期  文件名
--rw-rw-r-- ： 
+```
+
+
+
+#### 第一个字符 ：文件类型
+
 -：普通文件[指令，文本，动静态库，可执行程序，源程序]
 d：目录文件
 c: 字符设备文件 ：键盘与显示器
-b: 块设备文件   ：磁盘
+b: 块设备文件   ：块设备，block，磁盘
 p：管道文件     ：通信
-l：链接文件     ：软连接
+l：链接文件     ：软连接 link
+
+s：网络socke文件
+
+#### 三个 rw-rw-r--
+
+wx wx ：拥有者 所属组 
+0 Apr 29 22:01 wx.txt ： 大小  日期  文件名
+-rw-rw-r-- ： 
+
 rw-  rw-  r-- ： 拥有者  所属组  其他人
-r(是否具有读)w(是否具有写)-(是否具有可执行) ：读写执行
+r(是否具有读)w(是否具有写)-(是否具有可执行) ：读、写、执行
 r是-否   
 w是-否 
 x是-否
+
 ### 修改权限
-chmod u+rwx,g+rwx,o+rwx file.txt  给u拥有者 g所属组 o其他人 +权限
-chmod a+rwx file.txt 给a所有人+或减权限
+
+#### 给指定人改权限
+
+给u拥有者 g所属组 o其他人 +权限
+
+```c
+chmod u+rwx,g+rwx,o+rwx file.txt  
+```
+
+#### 给所有人改权限：a
+
+给a所有人+或减权限
+
+```c
+chmod a+rwx file.txt 
+```
+
 r读 w写 x执行
 权限有两种：r是 -否 可以用10代替
+
+#### 计算权限的数字
+
+```
 rw-rw-r-- ：110110100 ：8进制->664
-所以改权限可以是chmod 000 file.txt
+```
+
+110 110 100  对应的8进制就是664
+
+所以改权限可以是
+
+```
+chmod 000 file.txt
+```
+
 7 rwx
 6 rw-
 5 r-x
@@ -244,11 +481,44 @@ rw-rw-r-- ：110110100 ：8进制->664
 3 -wx
 2 -w-
 1 --x
+
+#### 修改权限代码
+
+```
+chmod u+x,g+x,o+x file.txt
+
+```
+
+
+
 ### 修改 拥有者 所属组
-sudo chown root file.txt    把文件拥有者给root  文件给别人要征求其他人
-sudo chgrp root file.txt    把文件所属组给root
-chgrp wx file.txt           如果文件是我的 修改组不需要sudo
-sudo chown root:root file.txt 改拥有者和所属组
+
+把文件拥有者给root  文件给别人要征求其他人
+
+但是sudo不用因为sudo是root，root是超级用户
+
+```
+sudo chown root file.txt  
+```
+
+把文件所属组给root 
+
+```
+ sudo chgrp root file.txt    
+```
+
+ 如果文件是我的 修改组不需要sudo
+
+```
+chgrp wx file.txt         
+```
+
+改拥有者和所属组
+
+```
+sudo chown root:root file.txt
+```
+
 ### 权限对目录的作用
 rwx  读写执行
 rw-  只能看目录里的文件名，也可以写进去 ，cd 进不去 也看不到文件信息
@@ -293,3 +563,24 @@ chmod o+t dir :只能对目录设置，限制other -可读可写，可删自己�
 ---x--x--t 1 wx wx 9 Apr 30 13:50 file.txt
 ### 临时文件
 会放在 /tmp文件夹下                                           
+
+### 更改用户
+
+#### 身份切换
+
+su
+
+输入root密码
+
+ctrl+d退回原来的用户
+
+#### 重新登陆
+
+su -
+
+#### 切换身份
+
+在root用户下
+
+`su wx` 则会切换到wx用户，访问不了其他用户的文件了
+
