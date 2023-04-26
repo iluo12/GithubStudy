@@ -305,7 +305,7 @@ gbk - 中文编码表
   s1[i]+=1;
   ```
 
-  > ![image-20220619201539923](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/image/202206192015956.png)
+  > <img src="https://picgo-1311604203.cos.ap-beijing.myqcloud.com/image/202206192015956.png" alt="image-20220619201539923" style="zoom:50%;" />
 
   
 

@@ -8,6 +8,13 @@
 
 可改变size的顺序表！
 
+|      |                                                    |
+| ---- | -------------------------------------------------- |
+| 优点 | 下标随机访问，尾插尾删效率高   (CPU高速缓存命中高) |
+| 缺点 | 扩容(效率、空间浪费)、不适合头插头删               |
+
+
+
 ## 1.2 vector的使用
 
 ### 1初始化
@@ -32,7 +39,7 @@
 | [begin](https://cplusplus.com/reference/vector/vector/begin/)+ [end](https://cplusplus.com/reference/vector/vector/end/) | iterator<br />const_iterator                 | 获取第一个数据位置的iterator/const_iterator， 获取最后一个数据的下一个位置 的iterator/const_iterator |
 | [rbegin](https://cplusplus.com/reference/vector/vector/rbegin/) + [rend](https://cplusplus.com/reference/vector/vector/rend/) | reverse_iterator<br />const_reverse_iterator | 获取最后一个数据reverse_iterator，获取第一个数据前一个位置的 reverse_iterator |
 
-> ![image-20220701083516846](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220701083516846.png)
+> ![image-20220710175732221](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220710175732221.png)
 
 #### 迭代器遍历
 

@@ -297,5 +297,265 @@ private:
 	int _b = 1;
     int
 };
+int main()
+{
+    cout << sizeof(Base) << endl; //12
+    return 0;
+}
 ```
 
+多出来的4字节是 虚函数表的指针
+
+![image-20220809233343218](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220809233343218.png)
+
+### 虚函数表指针
+
+简称：虚表指针
+
+是什么：虚表指针 是指针数组的指针
+
+表本质是一个==数组==
+
+
+
+### 为什么多态必须要基类的指针或引用呢？
+
+因为：
+
+#### 虚表指针如何运行？
+
+```c++
+class Person {
+public:
+	virtual Person* BuyTicket() { cout << "买票-全价" << endl;  return nullptr; } // 多态
+private:
+	int _a = 0;
+};
+class Student : public Person {
+public:
+	virtual Student* BuyTicket() { cout << "买票-半价" << endl; return nullptr; }  // 多态
+private:
+	int _a = 0;
+};
+void Func(Person& p)
+{
+	p.BuyTicket(); //多态
+}
+
+int main()
+{
+	Person a;
+	Student b;
+	Func(a);
+	Func(b); //切片传递
+}
+```
+
+因为有了多态，所以 a和b会找到自己对应的虚表
+
+![image-20220810000225742](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810000225742.png)
+
+![image-20220810000526830](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810000526830.png)
+
+#### 原因：
+
+普通对象不能传递虚表指针，传递过程中虚表指针会因为拷贝而被修改，而指针和引用是切片传递，不会进行拷贝。
+
+```c++
+int main()
+{
+	Person a;
+	Student b;
+	Func(a);
+	Func(b); //切片传递
+
+	Person& c = b;
+	Person d = b;
+}
+```
+
+![image-20220810002015893](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810002015893.png)
+
+**可以看到 C、D都赋值成了B ，而普通对象D的虚表指针 没继承B的。**
+
+此时也就说明 ，在函数传递形成多态时，如果传对象的过程中，父子对象的虚表 会被生成新的虚表，那么多态就找不到 父子的对应的虚函数，也就不能完成多态。
+如果是指针或引用则不会出现此情况，因为指针指向了对象，指针传递不会改变，引用是对象的别名，也不会改变
+
+#### 同类型对象虚表指针相同
+
+![image-20220810003259732](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810003259732.png)
+
+#### 存储位置
+
+普通函数和虚函数的存储位置一样吗？
+
+一样，都是存在代码段，只是虚函数要把地址存到虚表，多态的时候找，方便实现多态。
+
+#### 确定地址的时间(主要看是不是多态)
+
+多态调用，在编译时，不能确定调用的是哪个函数。
+
+是多态，则运行时，去p指向的对象的许表中找到虚函数的地址。
+
+不是多态，编译时就会确定地址。
+
+## 虚表的继承
+
+```
+class Base
+{
+public:
+	virtual void Func1()
+	{
+		cout << "Base::Func1()" << endl;
+	}
+
+	virtual void Func2()
+	{
+		cout << "Base::Func2()" << endl;
+	}
+
+	//void Func3()
+	//{
+	//	cout << "Base::Func3()" << endl;
+	//}
+
+private:
+	int _b = 1;
+};
+
+class Derive : public Base
+{
+public:
+	virtual void Func1()
+	{
+		cout << "Derive::Func1()" << endl;
+	}
+
+	//virtual void Func4()
+	//{
+	//	cout << "Derive::Func4()" << endl;
+	//}
+private:
+	int _d = 2;
+};
+
+int main()
+{
+	Base b;
+	Derive d;
+	
+	Base* p1 = &b;
+	p1->Func1();
+	p1 = &d;
+	p1->Func1();
+	
+	return 0;
+}
+```
+
+![image-20220810010355409](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810010355409.png)
+
+---
+
+假如 class A 有fun1、fun2
+
+class B 有fun1(重写) 、fun3
+
+虚表继承后，派生类B的虚表指针是不同的 指向不同的虚表，虚表中 重写的fun1 地址会修改，而继承的fun2的地址和基类的相同，  fun3也在虚表里，但是在vs监视窗口看不到，内存可看。(下图)
+
+![image-20220810010648688](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810010648688.png)
+
+---
+
+**==而虚表中存的也不是 函数的地址，而是跳转地址==**，再跳一层才会到函数的第一句指令的地址。(下图)
+
+**红线指向的顺序，是说明了虚表中存储的并不是函数的地址，而是跳转的地址，通过跳转再找到函数的地址红线指向的顺序，是说明了虚表中存储的并不是函数的地址，而是跳转的地址，通过跳转再找到函数的地址**
+
+![image-20220810012259128](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810012259128.png)
+
+#### 虚表存在哪里？
+
+表存在常量区和代码段之间  ==更接近常量区==
+
+表指针存在栈上
+
+#### 多继承的虚函数表
+
+```c++
+class Base1 {
+public:
+	virtual void func1() { cout << "Base1::func1" << endl; }
+	virtual void func2() { cout << "Base1::func2" << endl; }
+private:
+	int b1;
+};
+class Base2 {
+public:
+	virtual void func1() { cout << "Base2::func1" << endl; }
+	virtual void func2() { cout << "Base2::func2" << endl; }
+private:
+	int b2;
+};
+class Derive : public Base1, public Base2 {
+public:
+	virtual void func1() { cout << "Derive::func1" << endl; }
+	virtual void func3() { cout << "Derive::func3" << endl; }
+private:
+	int d1;
+};
+
+int main()
+{
+	Derive d;
+
+	Base1* p1 = &d;
+	p1->func1();
+
+	Base2* p2 = &d;
+	p2->func1();
+
+	return 0;
+}
+```
+
+##### fun3的继承
+
+d的虚表有俩张，而fun3会存在第一张虚表中，也就是先继承的那张虚表，第二张虚表没fun3
+
+##### 继承的fun1地址不同？
+
+虽然继承的fun1地址不同，但是这只是jump的地址，==最后会跳转到同一个地址==
+
+![image-20220810014313391](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810014313391.png)
+
+**总结：**多继承时，子类重写了Base1和Base2寻函数fun1，但是许表中重写的fun1的地址不一样。但是没关系，他们最终调到的还是同一个函数
+
+---
+
+第二个许表中的fun1 要跳转多次，主要是因为，Base2继承后的切片位置的修正。(如图)
+
+![image-20220810015218825](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20220810015218825.png)
+
+### 重写关系
+
+当ABCD， BC继承A，D继承BC，构成菱形继承后。 A中的F1在BC中重写后，必须在D中也重写，因为如果不重写，将会有歧义
+
+## 接口继承
+
+虚函数重写时，继承父类的虚函数接口，也就是函数、返回值、参数，重写的是虚函数的实现。
+
+```c++
+class A
+{
+public:
+	virtual void func(int val = 1){std::cout<<"A->"<<val<<std::endl;}
+};
+class B:public A
+{
+public:
+	void func(int val = 0){std::cout<<"B->"<<val<<std::endl;}
+};
+```
+
+也就是说此时如果形成多态，而B调用B的dunc时，val的缺省值是父类继承下来的，而不是自己的，只有实现才是按照自己写的调用。
