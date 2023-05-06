@@ -26,9 +26,97 @@
 
 存储字符串：`$name = 'holle world';`
 
+#### 全局变量
+
+必须用globa声明才可以变成全局的
+
+但是globa之能是把外面的局部变量，在内部声明成全局
+
+内部才能使用
+
+#### 静态变量
+
+**php中静态变量并不能再全局使用**
+
+**C中静态变量可以在全局使用**
+
+static关键字定义静态变量
+
+静态变量出作用域不会销毁，也不能被改变
+
+```
+static $a = 123;
+```
+
+错误示范
+
+```php
+function test3()
+{
+    static $jing = 123;
+    echo $jing;//true
+}
+test3();
+
+echo $jing;//error
+```
+
+静态变量不能再函数内使用
+
+```php
+static $jing = 123;
+function test3()
+{
+    echo $jing;//error
+}
+test3();
+```
+
+静态变量不能用globa声明成全局的
+
+```php
+static $jing = 123;
+function test3()
+{
+    globa $jing;//error
+    echo $jing;
+}
+test3();
+```
+
+C中可以
+
+```c
+
+	static a = 10;
+	
+	for (int i = 0; i <= 5; i++)
+	{
+		printf("%d\n", a);
+	}
+```
+
+
+
 #### 引用&
 
 `$b = &$a;` `$b`就是`$a`的别名
+
+##### 引用传参
+
+与C++的引用传参一样
+
+```php
+function test4(&$a)
+{
+    $a++;
+}
+$b = 1;
+test4($b);
+echo $b;//2
+```
+
+
 
 ### 常量
 
@@ -215,6 +303,12 @@ var_dump($num1 === $num2);//bool(false)
 
 异或：xor (规则 左右不一样就是true)
 
+逻辑运算符有截断（短路）的情况！
+
+例如 a || b   a成立 b则不执行
+
+例如a && b  a不成立 b也不执行
+
 | 例子       | 名称            | 结果                                                      |
 | :--------- | :-------------- | :-------------------------------------------------------- |
 | $a and $b  | And（逻辑与）   | **`true`**，如果 $a 和 $b 都为 **`true`**。               |
@@ -356,6 +450,430 @@ $num = '11';
 var_dump((int)$num);//int(11)
 ```
 
+## 流程控制
+
+### 判断语句
+
+#### if语句
+
+与C/C++同理
+
+不带括号只执行if后一条语句
+
+```php
+if(表达式) 执行语句；
+-----------------------
+if(表达式) 
+	执行语句；
+else
+	执行语句；
+-----------------------
+if(表达式) 
+	执行语句；
+else if(表达式)
+	执行语句；
+```
+
+
+
+#### switch
+
+不带break 会继续执行后面的case
+
+case后没有语句，直接执行后面的
+
+```php
+switch(表达式){
+	case 1：
+		语句块1;
+		break;
+	case 2:
+		语句块2;
+		break;
+	......
+	default:
+		语句块n;	
+}
+```
+
+
+
+### 循环语句
+
+#### for
+
+```php
+for(表达式1;表达式2;表达式3)
+{
+	语句块;
+}
+表达式1：初始化，可以多个
+表达式2：逻辑判断，可以多个
+表达式3：加减语句，可以多个
+
+```
+
+
+
+#### while
+
+```php
+while(表达式)
+{
+	语句;
+}
+```
+
+
+
+#### do...while
+
+```php
+do
+{
+	语句;
+}while(表达式);
+```
+
+### 特殊的控制语句
+
+#### break
+
+跳出当前所在循环语句
+
+break后面可以跟数字，表示跳出第几层，默认是1**（C语言不支持）**
+
+php支持break跳出多层
+
+```php
+for($i = 0;$i<5;$i++)
+{
+    echo "\$i执行到了第{$i}遍啦啦啦啦啦<br />";
+    for($j = 0;$j<5;$j++)
+    {
+        if($i == 2)
+            break 2;
+        echo "\$j执行到了第{$j}遍<br />";
+    }
+}
+```
+
+C语言break跟数字会报错
+
+```c
+int main()
+{
+	for (int i = 0; i <= 5; i++)
+	{
+		printf("%d打印到了%d层lalalaalalala\n", i, i);
+		for (int j = 0; j <= 5; j++)
+		{
+			if (j == 2)
+				break 2;
+			printf("%d打印到了%d层\n", i, i);
+		}
+	}
+	return 0;
+}
+```
+
+#### contine
+
+跳过本次循环后的语句
+
+#### exit()
+
+退出程序
+
+```php
+//可以直接写
+exit;
+//可以跟输出语句
+exit('程序退出啦');
+```
+
+#### die()
+
+与exit()一样
+
+## 函数
+
+### 格式
+
+```php
+function 函数名（参数...）
+{
+	函数体
+	return 表达式; 可以返回 也可以不返回，不写默认返回null
+}
+```
+
+### 关键字是：**function**
+
+```php
+function test()
+{
+    echo '你好';
+}
+test();
+```
+
+### 传参
+
+```php
+function test($a,$b)
+{
+    echo $a+$b;
+}
+test(1,2);
+```
+
+#### 引用传参
+
+与C++的引用传参一样
+
+```php
+function test4(&$a)
+{
+    $a++;
+}
+$b = 1;
+test4($b);
+echo $b;//2
+```
+
+#### 参数默认值
+
+**默认参数从右往左加**
+
+```php
+function test5($a = 222)
+{
+    echo $a;//222
+}
+test5();
+```
+
+#### 可变传参
+
+##### func_get_args();
+
+以**数组**的形式获取参数
+
+返回值是数组
+
+```php
+function test6()
+{
+    $arr = func_get_args();
+    var_dump(func_get_args());
+    //array(7) { [0]=> int(1) [1]=> int(2) [2]=> int(3) [3]=> int(4) [4]=> int(5) [5]=> int(6) [6]=> string(4) "ssss" }
+    var_dump($arr);
+    //array(7) { [0]=> int(1) [1]=> int(2) [2]=> int(3) [3]=> int(4) [4]=> int(5) [5]=> int(6) [6]=> string(4) "ssss" }
+}
+test6(1,2,3,4,5,6,'ssss');
+
+```
+
+##### func_get_arg();
+
+以数**组的下标**形式获取参数
+
+```php
+function test6()
+{
+    var_dump(func_get_arg(6));
+    //string(4) "ssss"
+}
+test6(1,2,3,4,5,6,'ssss');
+```
+
+##### func_num_args();
+
+返回传入参数的个数
+
+```php
+function test6()
+{
+    var_dump(func_num_args());// int(7)
+}
+test6(1,2,3,4,5,6,'ssss');
+```
+
+### 可变函数
+
+**把函数赋值给变量**
+
+也就是说a变量成了 test6()  直接可以当函数用
+
+**这是test6的别名？**
+
+```
+function test6()
+{
+    var_dump(func_num_args());//
+}
+$a = 'test6';
+$a(1,2,3,4,5,6,'ssss');
+```
+
+### 递归函数
+
+```
+{
+    echo $n.' ';
+    if($n > 0)
+        test($n-1);
+    else
+        echo '<-->';
+    echo $n,' ';
+}
+test(3);//3 2 1 0 <-->0 1 2 3
+
+```
+
+
+
+### 返回值
+
+```php
+function test($a,$b)
+{
+    $c =  $a+$b;
+    return $c; 
+}
+$d = test(1,2);
+
+echo "\$d等于",$d;
+```
+
+## 数组
+
+不写下标直默认0开始
+
+可以写键值对
+
+
+
+```php
+
+//方式一
+$struct[0] = 20;
+$struct[1] = '张三';
+$struct[2] = '男';
+$struct[3] = '70.5kg';
+print_r($struct);
+
+$struct[] = 20;
+$struct[] = '张三';
+$struct[] = '男';
+$struct[] = '70.5kg';
+print_r($struct);
+
+var_dump($struct);
+//方式二
+$struct[] = 20;
+$struct[] = '张三';
+$struct[] = '男';
+$struct[] = '70.5kg';
+
+//方式三
+$struct[0] = array(20,'张三','娜娜');
+$struct[0] =  20,'张三','娜娜';
+
+//方式四
+$struct[0] = array('年龄'=>20,'name'=>'张三');
+echo '<br />';
+
+echo $struct['name'];//20
+//方式五
+$struct['num'] = 20;
+$struct['name'] = '张三';
+$struct['sex'] = '男';
+echo '<br />';
+
+echo $struct['num'];//20
+echo $struct[1];//张三
+```
+
+## 数组的函数
+
+- [array_count_values](https://www.php.net/manual/zh/function.array-count-values.php) — 统计数组中所有的值
+
+返回值是一个数组
+
+```php
+<?php
+$array = array(1, "hello", 1, "world", "hello");
+print_r(array_count_values($array));
+?>
+```
+
+![image-20230506145452393](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230506145452393.png)
+
+- [array_key_exists](https://www.php.net/manual/zh/function.array-key-exists.php) — 检查数组里是否有指定的键名或索引
+
+array_key_exists(string|int `$key`, array `$array`): bool
+
+成功时返回 **`true`**， 或者在失败时返回 **`false`**。
+
+```
+$array = array(1, "hello", 1, "world", "hello");
+//print_r(array_count_values($array));
+var_dump(array_key_exists("zhangsan",$array));
+var_dump(array_key_exists("hello",$array));
+```
+
+![image-20230506150229466](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506150229466.png)
+
+- [array_search](https://www.php.net/manual/zh/function.array-search.php) — 在数组中搜索给定的值，如果成功则返回首个相应的键名
+
+  array_search([mixed](https://www.php.net/manual/zh/language.types.declarations.php#language.types.declarations.mixed) `$needle`, array `$haystack`, bool `$strict` = **`false`**):
+
+  (值，所在数组，判断类型（true）)
+
+  写true就是要判断所找到的值的类型是否相等
+
+```php
+<?php
+$array = array('name'=> "zhangsan",'sex' => "男");
+
+var_dump(array_search("name",$array));//false
+var_dump(array_search("zhangsan",$array));//true 返回key的值
+var_dump(array_search("hello",$array));//false
+```
+
+![image-20230506152536417](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506152536417.png)
+
+## 预定义超全局数组变量
+
+### 说明
+
+PHP 中的许多预定义变量都是“超全局的”，这意味着它们在一个脚本的全部作用域中都可用。在函数或方法中无需执行 **global $variable;** 就可以访问它们。
+
+### 变量是
+
+- [$GLOBALS](https://www.php.net/manual/zh/reserved.variables.globals.php)
+
+- [$_SERVER](https://www.php.net/manual/zh/reserved.variables.server.php)
+- [$_GET](https://www.php.net/manual/zh/reserved.variables.get.php)
+
+传递数据
+
+- [$_POST](https://www.php.net/manual/zh/reserved.variables.post.php) 
+
+传递数据
+
+- [$_FILES](https://www.php.net/manual/zh/reserved.variables.files.php)
+- [$_COOKIE](https://www.php.net/manual/zh/reserved.variables.cookies.php)
+- [$_SESSION](https://www.php.net/manual/zh/reserved.variables.session.php)
+- [$_REQUEST](https://www.php.net/manual/zh/reserved.variables.request.php)
+- [$_ENV](https://www.php.net/manual/zh/reserved.variables.environment.php)
+
+
+
+
+
 
 
 ## 关键字
@@ -456,3 +974,131 @@ unset($a);
 此时$a就是null
 ```
 
+### 定义函数function
+
+```php
+function test()
+{
+    echo '你好';
+}
+test();
+```
+
+### 全局变量globa
+
+声明$xxa为全局变量，只能在当前作用域声明
+
+```php
+$xxa = 10;
+define('XXA',10);
+function test2()
+{
+    global $xxa;//声明$xxa为全局变量，只能在当前作用域声明
+    echo $xxa;
+    echo XXA;
+}
+test2();
+```
+
+### 数组个数count()
+
+返回数组实际个数
+
+```php
+//方式一
+$struct[0] = 20;
+$struct[1] = '张三';
+$struct[2] = '男';
+$struct[3] = '70.5kg';
+print_r($struct);
+echo '<br />';
+
+echo count($struct);//4
+echo '<br />';
+
+```
+
+## 传递数据
+
+### 1.get方式
+
+例如：
+
+```
+http://localhost/myphp/index.php
+http://localhost/myphp/index.php?name='zhangsan'&id=520
+
+```
+
+![image-20230506141709688](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506141709688.png)
+
+### 2.post 方式
+
+代码
+
+```php
+<?php
+var_dump($_POST);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset = "utf-8" />
+    <title>预定义超全局数据变量</title>
+</head>
+<body>
+    <form method="post">
+        姓名:<input type="text" name='username' /><br />
+        性别:<input type="text" name='sex' /><br />
+        <input type="submit" value='提交' />
+    </form>
+</body>
+</html>
+```
+
+#### 运行
+
+![image-20230506142954425](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506142954425.png)
+
+#### 填入信息
+
+![image-20230506143019323](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230506143019323.png)
+
+#### 提交
+
+![image-20230506143045080](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506143045080.png)
+
+### 将以上代码改成get方式
+
+会将表单中填写的数据放在URL地址中
+
+#### 改代码
+
+![image-20230506143548289](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506143548289.png)
+
+```php
+<?php
+//var_dump($_POST);
+var_dump($_GET);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset = "utf-8" />
+    <title>预定义超全局数据变量</title>
+</head>
+<body>
+    <form method="get">//get
+        姓名:<input type="text" name='username' /><br />
+        性别:<input type="text" name='sex' /><br />
+        <input type="submit" value='提交' />
+    </form>
+</body>
+</html>
+```
+
+#### 填写+运行
+
+![image-20230506143636103](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506143636103.png)
