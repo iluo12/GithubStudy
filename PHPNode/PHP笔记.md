@@ -798,7 +798,9 @@ echo $struct[1];//张三
 
 ## 数组的函数
 
-- [array_count_values](https://www.php.net/manual/zh/function.array-count-values.php) — 统计数组中所有的值
+### [array_count_values](https://www.php.net/manual/zh/function.array-count-values.php) 
+
+— 统计数组中所有的值
 
 返回值是一个数组
 
@@ -811,7 +813,11 @@ print_r(array_count_values($array));
 
 ![image-20230506145452393](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230506145452393.png)
 
-- [array_key_exists](https://www.php.net/manual/zh/function.array-key-exists.php) — 检查数组里是否有指定的键名或索引
+### [array_key_exists](https://www.php.net/manual/zh/function.array-key-exists.php) 
+
+- — 检查数组里是否有指定的键名或索引
+
+  ### 
 
 array_key_exists(string|int `$key`, array `$array`): bool
 
@@ -826,7 +832,9 @@ var_dump(array_key_exists("hello",$array));
 
 ![image-20230506150229466](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506150229466.png)
 
-- [array_search](https://www.php.net/manual/zh/function.array-search.php) — 在数组中搜索给定的值，如果成功则返回首个相应的键名
+### [array_search](https://www.php.net/manual/zh/function.array-search.php) 
+
+- — 在数组中搜索给定的值，如果成功则返回首个相应的键名
 
   array_search([mixed](https://www.php.net/manual/zh/language.types.declarations.php#language.types.declarations.mixed) `$needle`, array `$haystack`, bool `$strict` = **`false`**):
 
@@ -844,6 +852,187 @@ var_dump(array_search("hello",$array));//false
 ```
 
 ![image-20230506152536417](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506152536417.png)
+
+### [in_array](https://www.php.net/manual/zh/function.in-array.php) 
+
+- — 检查数组中是否存在某个值
+
+如果找到 `needle` 则返回 **`true`**，否则返回 **`false`**。
+
+```php
+<?php
+$os = array("Mac", "NT", "Irix", "Linux");
+if (in_array("Irix", $os)) {
+    echo "Got Irix";
+}
+if (in_array("mac", $os)) {
+    echo "Got mac";
+}
+?>
+```
+
+### [list](https://www.php.net/manual/zh/function.list.php) 
+
+- — 把数组中的值赋给一组变量
+
+```php
+<?php
+
+$info = array('coffee', 'brown', 'caffeine');
+
+// 列出所有变量
+list($drink, $color, $power) = $info;
+echo "$drink is $color and $power makes it special.\n";
+
+// 列出他们的其中一个
+list($drink, , $power) = $info;
+echo "$drink has $power.\n";
+
+// 或者让我们跳到仅第三个
+list( , , $power) = $info;
+echo "I need $power!\n";
+
+// list() 不能对字符串起作用
+list($bar) = "abcde";
+var_dump($bar); // NULL
+?>
+```
+
+### [arsort](https://www.php.net/manual/zh/function.arsort.php) 
+
+— 对数组进行降向排序并保持索引关系
+
+### [asort](https://www.php.net/manual/zh/function.asort.php) 
+
+— 对数组进行升序排序并保持索引关系
+
+第二个参数可选
+
+> - **`SORT_REGULAR`** - 正常比较单元 详细描述参见 [比较运算符](https://www.php.net/manual/zh/language.operators.comparison.php) 章节
+> - **`SORT_NUMERIC`** - 单元被作为数字来比较
+> - **`SORT_STRING`** - 单元被作为字符串来比较
+> - **`SORT_LOCALE_STRING`** - 根据当前的区域（locale）设置来把单元当作字符串比较，可以用 [setlocale()](https://www.php.net/manual/zh/function.setlocale.php) 来改变。
+> - **`SORT_NATURAL`** - 和 [natsort()](https://www.php.net/manual/zh/function.natsort.php) 类似对每个单元以“自然的顺序”对字符串进行排序。
+> - **`SORT_FLAG_CASE`** - 能够与 **`SORT_STRING`** 或 **`SORT_NATURAL`** 合并（OR 位运算），不区分大小写排序字符串。
+
+```php
+<?php
+$fruits = array("d" => 70, "a" => 60, "b" => 80, "c" => 30);
+asort($fruits);
+print_r($fruits);
+?>
+```
+
+![image-20230508202253030](C:\Users\uaena\AppData\Roaming\Typora\typora-user-images\image-20230508202253030.png)
+
+
+
+### [array_filter](https://www.php.net/manual/zh/function.array-filter.php)
+
+ — 使用回调函数过滤数组的元素
+
+```php
+<?php
+echo '<br />';
+
+function odd($var)
+{
+    // 返回输入整数是否为奇数（单数）
+    return $var & 1;
+}
+function even($var)
+{
+    // 返回输入整数是否为偶数
+    return !($var & 1);
+}
+$array1 = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5];
+$array2 = [6, 7, 8, 9, 10, 11, 12];
+echo "Odd :\n";
+print_r(array_filter($array1, "odd"));
+echo "Even:\n";
+print_r(array_filter($array2, "even"));
+echo '<br />';
+
+?>
+```
+
+## 字符串函数
+
+### [trim](https://www.php.net/manual/zh/function.trim.php)
+
+trim — 去除字符串首尾处的空白字符（或者其他字符）
+
+返回过滤后的字符串。
+
+> - " " (ASCII `32` (`0x20`))，普通空格符。
+> - "\t" (ASCII `9` (`0x09`))，制表符。
+> - "\n" (ASCII `10` (`0x0A`))，换行符。
+> - "\r" (ASCII `13` (`0x0D`))，回车符。
+> - "\0" (ASCII `0` (`0x00`))，空字节符。
+> - "\v" (ASCII `11` (`0x0B`))，垂直制表符。
+
+可以在第二个参数添加要删除的字符、字符串
+
+### [strtoupper](https://www.php.net/manual/zh/function.strtoupper.php)
+
+ — 将字符串转化为大写
+
+返回转换后的大写字符串。
+
+```php
+<?php
+$str = "Mary Had A Little Lamb and She LOVED It So";
+$str = strtoupper($str);
+echo $str; // 打印 MARY HAD A LITTLE LAMB AND SHE LOVED IT SO
+?>
+```
+
+# [strtolower](https://www.php.net/manual/zh/function.strtolower.php)
+
+strtolower — 将字符串转化为小写
+
+# [substr_count](https://www.php.net/manual/zh/function.substr-count.php)
+
+substr_count — 计算字串出现的次数
+
+该函数返回 int。
+
+参数（字符串，要搜索的字符串，开始计数的偏移下标，有偏移下标后最大搜索长度）
+
+```php
+$str = "testtest"
+substr_count(str,'te');//2
+
+// 输出 1，因为该函数不计算重叠字符串
+$text2 = 'gcdgcdgcd';
+echo substr_count($text2, 'gcdgcd');//1
+```
+
+# [stripos](https://www.php.net/manual/zh/function.stripos.php)
+
+stripos — 查找字符串首次出现的位置（不区分大小写）
+
+#### 参数
+
+```php
+$str = "testtest"
+strpos($str,'t');
+strpos($str,'t',1,2);
+```
+
+#### 返回值
+
+找到了返回下标(从0开始)
+
+如果未发现将返回 **`false`**。
+
+
+
+### [strstr](https://www.php.net/manual/zh/function.stristr.php)
+
+函数的忽略大小写版本
+
+
 
 ## 预定义超全局数组变量
 
