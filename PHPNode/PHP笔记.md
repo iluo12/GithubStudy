@@ -747,6 +747,12 @@ $d = test(1,2);
 echo "\$d等于",$d;
 ```
 
+### 函数的路径
+
+函数内写的绝对路径 是盘的根目录
+
+而html中绝对路径是 网站的根目录
+
 ## 数组
 
 不写下标直默认0开始
@@ -796,9 +802,9 @@ echo $struct['num'];//20
 echo $struct[1];//张三
 ```
 
-## 数组的函数
+### 数组的函数
 
-### [array_count_values](https://www.php.net/manual/zh/function.array-count-values.php) 
+#### [array_count_values](https://www.php.net/manual/zh/function.array-count-values.php) 
 
 — 统计数组中所有的值
 
@@ -813,7 +819,7 @@ print_r(array_count_values($array));
 
 ![image-20230506145452393](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230506145452393.png)
 
-### [array_key_exists](https://www.php.net/manual/zh/function.array-key-exists.php) 
+#### [array_key_exists](https://www.php.net/manual/zh/function.array-key-exists.php) 
 
 - — 检查数组里是否有指定的键名或索引
 
@@ -832,7 +838,7 @@ var_dump(array_key_exists("hello",$array));
 
 ![image-20230506150229466](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506150229466.png)
 
-### [array_search](https://www.php.net/manual/zh/function.array-search.php) 
+#### [array_search](https://www.php.net/manual/zh/function.array-search.php) 
 
 - — 在数组中搜索给定的值，如果成功则返回首个相应的键名
 
@@ -853,7 +859,7 @@ var_dump(array_search("hello",$array));//false
 
 ![image-20230506152536417](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506152536417.png)
 
-### [in_array](https://www.php.net/manual/zh/function.in-array.php) 
+#### [in_array](https://www.php.net/manual/zh/function.in-array.php) 
 
 - — 检查数组中是否存在某个值
 
@@ -871,7 +877,7 @@ if (in_array("mac", $os)) {
 ?>
 ```
 
-### [list](https://www.php.net/manual/zh/function.list.php) 
+#### [list](https://www.php.net/manual/zh/function.list.php) 
 
 - — 把数组中的值赋给一组变量
 
@@ -898,11 +904,11 @@ var_dump($bar); // NULL
 ?>
 ```
 
-### [arsort](https://www.php.net/manual/zh/function.arsort.php) 
+#### [arsort](https://www.php.net/manual/zh/function.arsort.php) 
 
 — 对数组进行降向排序并保持索引关系
 
-### [asort](https://www.php.net/manual/zh/function.asort.php) 
+#### [asort](https://www.php.net/manual/zh/function.asort.php) 
 
 — 对数组进行升序排序并保持索引关系
 
@@ -927,7 +933,7 @@ print_r($fruits);
 
 
 
-### [array_filter](https://www.php.net/manual/zh/function.array-filter.php)
+#### [array_filter](https://www.php.net/manual/zh/function.array-filter.php)
 
  — 使用回调函数过滤数组的元素
 
@@ -987,11 +993,11 @@ echo $str; // 打印 MARY HAD A LITTLE LAMB AND SHE LOVED IT SO
 ?>
 ```
 
-# [strtolower](https://www.php.net/manual/zh/function.strtolower.php)
+### [strtolower](https://www.php.net/manual/zh/function.strtolower.php)
 
 strtolower — 将字符串转化为小写
 
-# [substr_count](https://www.php.net/manual/zh/function.substr-count.php)
+### [substr_count](https://www.php.net/manual/zh/function.substr-count.php)
 
 substr_count — 计算字串出现的次数
 
@@ -1008,7 +1014,7 @@ $text2 = 'gcdgcdgcd';
 echo substr_count($text2, 'gcdgcd');//1
 ```
 
-# [stripos](https://www.php.net/manual/zh/function.stripos.php)
+### [stripos](https://www.php.net/manual/zh/function.stripos.php)
 
 stripos — 查找字符串首次出现的位置（不区分大小写）
 
@@ -1030,7 +1036,92 @@ strpos($str,'t',1,2);
 
 ### [strstr](https://www.php.net/manual/zh/function.stristr.php)
 
-函数的忽略大小写版本
+查找子串
+
+返回匹配的子字符串。如果 `needle` 未找到，返回 **`false`**。
+
+
+
+
+
+### [str_replace](https://www.php.net/manual/zh/function.str-replace.php)
+
+str_replace — 子字符串替换
+
+参数(原字符，换成的字符，在那个串里,$count（如果更改成功，则会置换成更改次数，）)
+
+第一二个参数可以是数组
+
+```php
+<?php
+$str = 'testtest';
+$STR = str_replace('te','TE',$str);
+
+echo $str;//testtest
+echo $STR;//TEstTEst
+?>
+$STR = str_replace(array('t','e'),array('T','E'),$str);
+    
+```
+
+### 字符串截取函数
+
+#### [substr](https://www.php.net/manual/zh/function.substr.php)
+
+substr — 返回字符串的子串
+
+##### 参数
+
+参数（字符串，开始截取的位置（下标），截取长度）
+
+第二个参数是负数的话，从后往前截取
+
+##### 返回值
+
+返回提取的 `string` 部分或者空字符串。
+
+### 字符串分割函数
+
+#### [explode](https://www.php.net/manual/zh/function.explode.php)
+
+explode — 使用一个字符串分割另一个字符串
+
+```php
+$str = 'test,test1|test2,test3';
+var_dump(explode(',',$str));//3串
+echo "\n";
+var_dump(explode(',',$str,2));//2串
+echo "\n";
+var_dump(explode('|',$str));//2串
+echo "\n";
+//看图
+```
+
+![image-20230509155026979](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230509155026979.png)
+
+#### [str_split](https://www.php.net/manual/zh/function.str-split.php)
+
+ — 将字符串转换为数组
+
+返回值：数组
+
+参数（字符串，分割的字符长度）
+
+## 与HTM标签相关函数
+
+### [hemlspecialchars](https://www.php.net/manual/zh/function.htmlspecialchars.php)
+
+htmlspecialchars — 将特殊字符转换为 HTML 实体
+
+用户输入html代码，不按照代码执行，而是把代码转换成字符串显示出来
+
+### [strip_tags](https://www.php.net/manual/zh/function.strip-tags.php)
+
+strip_tags — 从字符串中去除 HTML 和 PHP 标签
+
+第二个参数可以是被忽略的标签 如：“<div><p>"
+
+用户输入html代码，不按照代码执行，干掉代码，只显示要输出的文本
 
 
 
@@ -1291,3 +1382,184 @@ var_dump($_GET);
 #### 填写+运行
 
 ![image-20230506143636103](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimage-20230506143636103.png)
+
+## 正则表达式
+
+### 定界符
+
+一般是`/`
+
+还可以是除了字母、数字、反斜线以外的字符
+
+比如 # ！ {} |  定界符放在正则表达式的其实位置，和结束位置
+
+案例
+
+```
+/haha/
+```
+
+
+
+| \d         | 匹配任意一个十进制数字，等价于【0-9】                        |
+| ---------- | ------------------------------------------------------------ |
+| \D         | 匹配任意一个除十进制数字意外字符                             |
+| \s         | 匹配任意一个空白字符，比如幻夜符、换行符、回车符、制表符、垂直制表符 |
+| \S         | 匹配除空白字符意外的任何一个字符                             |
+| \w         | 匹配任意一个数字或字母或下划线                               |
+| \W         | 匹配除数字、字母、下划线以外的任意一个字符                   |
+| .          | 匹配除换行符以外的任意一个字符                               |
+| *          | 匹配0次，或1次，或多次前面的字符                             |
+| +          | 匹配1次或多次前面的字符                                      |
+| ？         | 匹配0次或1次前面的字符                                       |
+| {n}        | 表示前面的字符恰好出现n次                                    |
+| {n,}       | 表示线面的字符出现不少于n次                                  |
+| {n,m}      | 表示前面的字符至少出现n次，最多出现m次                       |
+| ^或\A      | 匹配字符串开始位置 比如 ^test 必须以t开头才能匹配            |
+| $或\Z      | 匹配字符串的结束位置 比如 test$ 必须以t结尾才能匹配          |
+| \|         | 匹配两个或多个模式                                           |
+| []         | 匹配方括号中的任意一个字符                                   |
+| ()         | 将圆括号作为一个整体以便将期中的内容获取到，可以使用 \\\\数字 表示括号的内容 比如 /t(e)st\\\1/ ，\\\\1代表第一个括号里的内容，匹配的时候 必须是 ’teste‘才能匹配成功 |
+| .与{n}配合 | /t.{3}st/ 表示在t和st之间任意字符正好出现三次                |
+| .与*配合   | /t.*st/ 表示在t和st之间任何字符出现任意次数<br />贪婪匹配，尽可能多的匹配所有字符  比如 testabst 匹配完是testabst<br />在.\*后加? 解决贪婪匹配——懒惰匹配 比如testabst 匹配完是test <br /> |
+
+
+
+
+
+#### 相关函数
+
+##### preg_match_all()
+
+作用
+
+用正则表达式在字符串中找字符串，存在二维数组里
+
+参数(正则表达式的字符串；要查找的字符串；把查找的字符串放在数组里（二维）)
+
+### 模式修正符
+
+| i    | 在和模式进行匹配时不区分大小写 比如：/test/i 匹配时 TEST，Test，test 都能匹配上 |
+| ---- | ------------------------------------------------------------ |
+| m    | 多行匹配，条件1：目标字符串必须包含“\n” ，条件2：正则表达式必须出现^或$ |
+| s    | . 匹配的所有字符将包括换行符号（\n） 原本不包含              |
+| U    | 禁止贪婪匹配                                                 |
+
+### 与正则表达式配合的函数
+
+#### [preg_match](https://www.php.net/manual/zh/function.preg-match.php)
+
+preg_match — 执行匹配正则表达式
+
+只匹配一次 ，找到返回1，找不到返回0
+
+#### [preg_maech_all](https://www.php.net/manual/zh/function.preg-match-all.php)
+
+
+
+#### [preg_replace](https://www.php.net/manual/zh/function.preg-replace.php)
+
+preg_replace — 执行一个正则表达式的搜索和替换
+
+##### 参数
+
+（正则表达式；要改变的字符串；被改变的字符串；默认-1 ，要替换的个数；存储改变的次数）
+
+第一二个参数可以放数组
+
+##### 返回值
+
+返回一个字符串
+
+```php
+$pattern = '/<div>(.*?)<\/div>/';
+$str1 = '<a>\\1</a>';//   \\1代表上一条找到的串
+$str='abc<div>asddddd</div>ads';
+//如果用正则表达式找到了这个串则返回1，内容存在$arr里
+if(preg_match($pattern,$str,$arr)){
+   // 将找到的串 替换成str1
+    var_dump(preg_replace($pattern,$str1,$str));
+}
+else{
+    echo 'error';
+}
+var_dump($str);
+
+输出：
+    
+string(20) "abc<a>asddddd</a>ads"//被替换过的串
+string(24) "abc<div>asddddd</div>ads"//原来的串
+//只替换了标签
+```
+
+## 增强
+
+### 设置时区
+
+```
+date_default_timezone_set('Asia/Shanghai');
+```
+
+### 获取当前Unix时间戳
+
+```
+time()
+```
+
+#### 获取指定函数时间戳
+
+```
+mktime()
+```
+
+#### 时间戳转换
+
+date — 格式化 Unix 时间戳
+
+参数：第一个参数是格式，第二个参数是时间戳，默认现在
+
+返回值：返回格式化后的日期字符串。
+
+```
+date()
+date("Y-m-d H:i:s");//2001-03-10 17:16:18（MySQL DATETIME 格式）
+```
+
+### 获取Unix时间戳和微秒数
+
+```php
+microtime()//返回微秒和时间戳
+microtime()//返回浮点数的时间戳和微秒数
+    
+    date_default_timezone_set('Asia/Shanghai');
+$STime=microtime(true);
+for($i =0;$i<100000000;$i++)
+{}
+$ETime=microtime(true);
+echo 'for循环花费了'.round(($ETime-$STime),4).'秒';
+
+```
+
+### 绘制图像
+
+```php
+<?php
+header('Content-type:image/jpeg');//告诉浏览器 这是一个图片,必须在第一行之前不能输出内容
+$img=imagecreatetruecolor(200,200);//新建一个长和高200像素的真彩色图像
+$color1=imagecolorallocate($img,50,50,200);//新建颜色
+$color1=imagecolorallocate($img,230,50,50);
+$color1=imagecolorallocate($img,50,230,50);
+imagefill($img,0,0,$color1);//把颜赋值给图片
+imagejpeg($img);//以jpeg输出给浏览器
+imagedestroy($img);//释放图片资源
+```
+
+```
+imagejpeg($img,'green.jpeg');//生成图片，保存在相对路径
+指定路径：
+imagejpeg($img,'image/green.jpeg');
+
+```
+
+![image-20230509221334775](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230509221334775.png)
+
