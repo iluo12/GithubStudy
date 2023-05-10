@@ -1563,3 +1563,87 @@ imagejpeg($img,'image/green.jpeg');
 
 ![image-20230509221334775](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230509221334775.png)
 
+## 功能实现
+
+### 绘制验证码
+
+```php
+<?php
+header('Content-type:image/jpeg');
+$width =120;
+$height = 40;
+//验证码文字
+$element=array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+$string="";
+for($i = 0;$i<5;$i++){
+    $string .= $element[rand(0,count($element)-1)];//随机出字母，拼接到字符串上
+}
+$img = imagecreatetruecolor($width,$height);//定义图像大小
+                                    //R           G             B 颜色值
+$colorBg=imagecolorallocate($img,rand(200,255),rand(200,255),rand(200,255));
+$colorBorder=imagecolorallocate($img,rand(200,255),rand(200,255),rand(200,255));
+$colorDian=imagecolorallocate($img,rand(100,200),rand(100,200),rand(100,200));
+$colorXian=imagecolorallocate($img,rand(100,200),rand(100,200),rand(100,200));
+$colorStr=imagecolorallocate($img,rand(10,100),rand(10,100),rand(10,100));
+
+imagefill($img,0,0,$colorBg);//填充颜色
+imagerectangle($img,0,0,$width-1,$height-1,$colorBorder);//边框
+for($i = 0;$i<100;$i++){
+    //                  横纵坐标
+    imagesetpixel($img,rand(0,$width-1),rand(0,$height-1),$colorDian);//画一个像素的颜色块
+}
+for($i = 0;$i<3;$i++){//画随机线条
+    //      图    ；起点横坐标      ；起点纵坐标        ；终点横坐标            ；终点纵坐标        ；颜色
+    imageline($img,rand(0,$width/2),rand(0,$height/2),rand($width/2,$width),rand(0,$height/2),$colorXian);
+}
+//imagestring($img,5,0,0,"abcd",$colorStr);//写字
+            //图；字符串角度；字左下角横坐标；纵坐标                ；颜色      ；字体路径           ；输出的字体
+imagettftext($img,25,rand(-5,5),rand(5,15),rand($height-10,$height-5),$colorStr,'font/Quantum.otf',$string);//写字
+
+
+
+imagejpeg($img);//输出图片
+
+
+imagedestroy($img);//释放图片资源
+
+?>
+```
+
+### 图片加文字水印
+
+```php
+<?php
+header('Content-type:image/jpeg');
+$strrand = rand(1,6);//定义随机数
+$imgPath="images/IU{$strrand}.jpg";//定义图片路径，图片右6张 随机出现
+$img=imagecreatefromjpeg($imgPath);//以jpeg格式打开一张图片
+//定义字体
+$strFontSize=30;//大小
+$strFont='font/SourceHanSansCN-Regular.otf';//路径
+$strContent="IU李知恩";//内容
+$strContent="www.iulzn.com";//内容
+//获取图片宽高
+$width=imagesx($img);
+$height=imagesy($img);
+//getimagesize('images/IU.jpg');//返回数组，长宽和其他值
+
+//获取字体的区域
+$position=imagettfbbox($strFontSize,0,$strFont,$strContent);
+$stringWidth=$position[2]-$position[0];//字体坐标相减获得字体长度
+
+$colorS=imagecolorallocate($img,255,255,255);
+// imagettftext($img,100,0,100,100,$colorS,'font/Quantum.otf',"www.iulzn.com");
+//字体写在图的那个位置
+imagettftext($img,$strFontSize,0,$width-1-$stringWidth-($width/50),$height-1-($height/50),$colorS,$strFont,$strContent);
+
+
+
+
+
+imagejpeg($img);//输出图片
+imagedestroy($img);//释放图片资源
+
+?>
+```
+
