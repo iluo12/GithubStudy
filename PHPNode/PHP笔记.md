@@ -1540,7 +1540,9 @@ echo 'for循环花费了'.round(($ETime-$STime),4).'秒';
 
 ```
 
-### 绘制图像
+### 图像处理
+
+#### 绘制图像
 
 ```php
 <?php
@@ -1563,9 +1565,9 @@ imagejpeg($img,'image/green.jpeg');
 
 ![image-20230509221334775](https://picgo-1311604203.cos.ap-beijing.myqcloud.com/imageimageimage-20230509221334775.png)
 
-## 功能实现
+#### 功能实现
 
-### 绘制验证码
+##### 绘制验证码
 
 ```php
 <?php
@@ -1610,7 +1612,7 @@ imagedestroy($img);//释放图片资源
 ?>
 ```
 
-### 图片加文字水印
+##### 图片加文字水印
 
 ```php
 <?php
@@ -1618,6 +1620,10 @@ header('Content-type:image/jpeg');
 $strrand = rand(1,6);//定义随机数
 $imgPath="images/IU{$strrand}.jpg";//定义图片路径，图片右6张 随机出现
 $img=imagecreatefromjpeg($imgPath);//以jpeg格式打开一张图片
+
+$imgWaterMarkPath="images/watermark.png";
+$imgWaterMark = imagecreatefrompng($imgWaterMarkPath);
+
 //定义字体
 $strFontSize=30;//大小
 $strFont='font/SourceHanSansCN-Regular.otf';//路径
@@ -1626,6 +1632,10 @@ $strContent="www.iulzn.com";//内容
 //获取图片宽高
 $width=imagesx($img);
 $height=imagesy($img);
+
+$WaterMarkWidth=imagesx($imgWaterMark);
+$WaterMarkHeight=imagesy($imgWaterMark);
+
 //getimagesize('images/IU.jpg');//返回数组，长宽和其他值
 
 //获取字体的区域
@@ -1634,9 +1644,26 @@ $stringWidth=$position[2]-$position[0];//字体坐标相减获得字体长度
 
 $colorS=imagecolorallocate($img,255,255,255);
 // imagettftext($img,100,0,100,100,$colorS,'font/Quantum.otf',"www.iulzn.com");
-//字体写在图的那个位置
 imagettftext($img,$strFontSize,0,$width-1-$stringWidth-($width/50),$height-1-($height/50),$colorS,$strFont,$strContent);
 
+/*
+参数：
+$img:目标图像资源
+$imgWaterMark:水印图像资源
+100：所要拷贝到目标图像自愿上面的坐标（x轴位置
+100：所要拷贝到目标图像自愿上面的坐标（y轴位置
+0：从水印的图像资源的x坐标为0的位置开始拷贝
+0：从水印的图像资源的y坐标为0的位置开始拷贝
+$WaterMarkWidth：所要拷贝的水印图像的长度
+$WaterMarkHeight：所要拷贝的水印图像的高度
+
+最后一个参数是透明度 0-100 透明-不透明
+*/
+imagecopy($img,$imgWaterMark,100,100,0,0,$WaterMarkWidth,$WaterMarkHeight);
+//放在左下角
+//imagecopy($img,$imgWaterMark,$width-1-$WaterMarkWidth,$height-1-$WaterMarkHeight,0,0,$WaterMarkWidth,$WaterMarkHeight);
+//调透明度，最后一个参数是透明度 0-100 透明-不透明
+imagecopymerge($img,$imgWaterMark,$width-1-$WaterMarkWidth,$height-1-$WaterMarkHeight,0,0,$WaterMarkWidth,$WaterMarkHeight,50);
 
 
 
@@ -1646,4 +1673,175 @@ imagedestroy($img);//释放图片资源
 
 ?>
 ```
+
+### 文件处理
+
+#### 判断函数
+
+##### is_file()
+
+//判断文件名是否是正常文件
+
+```php
+var_dump(is_file('index.php'));//true
+```
+
+##### is_dir()
+
+//判断文件名是否是目录
+
+```php
+var_dump(is_file('../myphp'));//true
+```
+
+
+
+#### 文件属性
+
+##### file_exists()
+
+检查文件或目录是否存在 
+
+##### filesize()
+
+获取普通文件的大小
+
+#####  is_readable
+
+判断给定文件名是否可读
+
+##### is_writable()
+
+判定给定文件名时候可写
+
+##### filectime()
+
+获取文件名的创建时间
+
+##### filemtime()
+
+获取文件修改时间
+
+##### fileatime()
+
+获取文件上次访问时间
+
+##### stat()
+
+获取文件大部分属性
+
+##### 演示
+
+```php
+<?php
+date_default_timezone_set("Asia/Shanghai");
+echo "is_file".var_dump(is_file('index.php'))."<br />";//bool(true) is_file
+echo "file_exists".var_dump(file_exists('index.php'))."<br />";//bool(true) file_exists
+echo "filesize".var_dump(filesize('index.php'))."<br />";//int(320) filesize
+echo "is_readable".var_dump(is_readable('index.php'))."<br />";//bool(true) is_readable
+echo "is_writable".var_dump(is_writable('index.php'))."<br />";//bool(true) is_writable
+echo "filectime".var_dump(filectime('index.php'))."<br />";//int(1681234576) filectime
+echo "filectime".date('Y-m-d G:i:s',filectime('index.php'))."<br />";//filectime2023-04-12 1:36:16
+echo "filectime".var_dump(stat('index.php'))."<br />";//获取文件大部分属性
+?>
+```
+
+#### 目录操作
+
+##### basename()
+
+返回路径中的文件名部分
+
+##### dirname()
+
+返回路径中目录部分
+
+##### pathinfo()
+
+返回文件路径的信息
+
+##### opendir()
+
+打开目录句柄
+
+##### readdir()
+
+从目录句柄中国读取条目，返回目录中下一个文件的文件名
+
+##### rewinddir()
+
+重置目录句柄
+
+##### closedir()
+
+关闭目录句柄
+
+##### mkdir()
+
+新建目录
+
+##### rmdir()
+
+删除指定的空目录
+
+##### scandir()
+
+列出指定路径中的文件和目录
+
+##### 演示
+
+```php
+
+echo "File----".__FILE__."<br />";//File----D:\phpStudy\WWW\myphp\index.php
+echo "basename----".basename(__FILE__)."<br />";//basename----index.php
+echo "dirname----".dirname(__FILE__)."<br />";//dirname----D:\phpStudy\WWW\myphp
+echo "pathinfo----".var_dump(pathinfo(__FILE__))."<br />\n";
+/*
+array(4) {
+  ["dirname"]=>
+  string(21) "D:\phpStudy\WWW\myphp"
+  ["basename"]=>
+  string(9) "index.php"
+  ["extension"]=>
+  string(3) "php"
+  ["filename"]=>
+  string(5) "index"
+}
+*/
+$dir=opendir('../');//打开目录句柄
+$newdir = "newdir";
+var_dump(readdir($dir));//返回目录句柄中的下一个文件
+var_dump(readdir($dir));
+var_dump(readdir($dir));
+var_dump(readdir($dir));
+var_dump(readdir($dir));
+var_dump(readdir($dir));
+
+var_dump(rewinddir($dir));//重置目录句柄
+var_dump(closedir($dir));//关闭目录句柄
+var_dump(mkdir($newdir));//新建目录 true
+/*
+mkdir参数：
+'newdir'：要创建的目录名
+0777：目录权限参数
+true：允许递归创建
+*/
+//var_dump(rmdir($newdir));//删除指定的空目录
+var_dump(scandir('./images'));//列出指定路径中的文件和目录
+
+```
+
+#### 文件操作
+
+##### fopen()
+
+打开文件或URL
+
+##### fread()
+
+读取文件
+
+##### fgets()
+
+从文件指针中读取
 
