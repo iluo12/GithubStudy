@@ -1845,3 +1845,108 @@ var_dump(scandir('./images'));//列出指定路径中的文件和目录
 
 从文件指针中读取
 
+##### 演示+函数
+
+```php 
+header("Content-type:text/html;charset=utf-8");
+$file = fopen('./newdir/text.txt','r+');
+
+var_dump(fread($file,1));
+
+var_dump(fgets($file));//一次读一行
+var_dump(fgets($file));//一次读一行
+var_dump(fgets($file));//一次读一行
+
+var_dump(feof($file));//读取文件是否读完了 读完了返回true
+
+rewind($file);//重置文件指针
+var_dump(fseek($file,0,SEEK_END));//定位文件指针，在第三个参数的位置上添加第二个参数的偏移量
+var_dump(fwrite($file,"这是fwrite写入的文本"));//向文件写入，会覆盖已有的文本，返回写入的字节数 
+//flock();//文件加锁
+fclose($file);//关闭文件指针
+
+//file_get_contents();//将整个文件读入一个字符串
+//file_put_contents();//将字符串写入文件，覆盖
+//rename();//重命名目录或文件
+//readfile();//读入一个文件并写入到缓冲
+```
+
+#### 文件上传
+
+```php
+<?php
+header('Content-type:text/html;charset=utf-8');
+date_default_timezone_set('Asia/Shanghai');
+//var_dump($_FILES);
+/*
+当用post方式上传文件时，全局变量$_FILES将会设置成一个数组，存储被上传文件的信息
+array(1) {
+  ["myfile"]=>
+  array(5) {
+    ["name"]=>
+    string(88) "[IU TV] 【中字】'dlwlrma.' 音乐会 - 曼谷_190417_IU李知恩-Uaena_1920x1080.mp4"
+    ["type"]=>
+    string(9) "video/mp4"   //文件类型
+    ["tmp_name"]=>
+    string(45) "C:\Users\uaena\AppData\Local\Temp\php3E78.tmp"    //临时名字
+    ["error"]=>
+    int(0)      //有0个错误
+    ["size"]=>
+    int(316599039)
+  }
+}
+*/
+if(isset($_POST['submit'])){//检测变量是否已声明并且其值不为 null
+    if(is_uploaded_file($_FILES['myfile']['tmp_name'])){//判断指定文件是否通过HTTP POST上传
+        $arr=pathinfo($_FILES['myfile']['name']);//pathinfo返回文件路径信息，期中extension对应的是文件的后缀
+        $newName=date('YmdGis').rand(1000,9999);
+        //文件上传后，会先存储于服务器的临时目录中，可以使用该函数将上传的文件移动到新的位置
+        //                        文件名                    ,新的名称
+        if(move_uploaded_file($_FILES['myfile']['tmp_name'],"uploads/{$newName}.{$arr['extension']}")){
+            echo '恭喜你上传成功！';
+        }else{
+            echo '对不起文件移动失败!';
+        }
+    }else{
+      exit('可能有攻击，非法！');
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="zg-CN">
+<head>
+<meta charset="utf-8" />
+<title>上传页面</title>
+</head>
+<body>
+<form action="" method="post" enctype="multipart/form-data">
+    <input type="file" name="myfile" /><!-- type="file" 定义文件选择字段和 "浏览..." 按钮，供文件上传。-->
+    <input type="submit" name="submit" value="开始上传" /><!--提交按钮 -->
+</form>  
+</body>
+</html>
+```
+
+#### 文件下载
+
+```php
+<?php
+date_default_timezone_set('Asia/Shanghai');
+
+$file='images/IU1.7z';
+$fileinfo=finfo_open(FILEINFO_MIME_TYPE);//打开文件，常量：返回mime类型
+$mimeType=finfo_file($fileinfo,$file);//返回文件类型（
+finfo_close($fileinfo);
+//发送指定文件MIME类型的头信息
+header("Content-type:{$mimeType};charset=utf-8");
+//指定下载文件的描述
+header('Content-Disposition:attachement;filename='.basename($file));
+//指定文件的大小
+header('Content-Length:'.filesize($file));
+//读取文件内容输出到缓冲区，返回这个文件
+readfile($file);
+
+?>
+```
+
