@@ -1950,3 +1950,75 @@ readfile($file);
 ?>
 ```
 
+## 会话控制cookie
+
+### cookie
+
+cookie是用来将网站的资料记录在客户端的技术，这种技术让web服务器能将一些资料，存放于客户端之中
+
+#### 1.向客户端电脑设置Cookie
+
+访问index.php
+
+设置一维数组
+
+```php
+<?php
+header('Content-type:text/html;charset=utf-8');
+var_dump(setcookie('name','phpCookie',time()+3600));
+var_dump(setcookie('email','123@qq.com',time()+3600));
+?>
+
+
+array(3) {
+  ["name"]=>
+  string(9) "phpCookie"
+  ["email"]=>
+  string(10) "123@qq.com"
+}
+
+```
+
+#### 2.在服务器端读取Cookie内容
+
+访问index1.php
+
+```php
+<?php
+header('Content-type:text/html;charset=utf-8');
+var_dump($_COOKIE);
+?>
+```
+
+
+
+#### 3.将多维数组应用于Cookie
+
+```
+
+var_dump(setcookie('member[name]','phpCookie',time()+3600));
+var_dump(setcookie('member[email]','123@qq.com',time()+3600));
+
+array(3) {
+  ["name"]=>
+  string(9) "phpCookie"
+  ["email"]=>
+  string(10) "123@qq.com"
+  ["member"]=>
+  array(2) {
+    ["name"]=>
+    string(9) "phpCookie"
+    ["email"]=>
+    string(10) "123@qq.com"
+  }
+}
+```
+
+
+
+#### 4.删除Cookie
+
+```
+
+```
+
