@@ -41,3 +41,6 @@ x64
 *.vcxproj
 *.filters
 *.user
+
+#屏蔽.bat自动提交程序
+*.bat
