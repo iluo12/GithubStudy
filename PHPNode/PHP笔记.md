@@ -1994,7 +1994,7 @@ var_dump($_COOKIE);
 
 #### 3.将多维数组应用于Cookie
 
-```
+```php
 
 var_dump(setcookie('member[name]','phpCookie',time()+3600));
 var_dump(setcookie('member[email]','123@qq.com',time()+3600));
@@ -2018,7 +2018,37 @@ array(3) {
 
 #### 4.删除Cookie
 
+```php
+setcookie('username',$_POST['username'],time()-3600)
 ```
 
+## 引用其他文件
+
+### include
+
+```php
+index.php
+{
+#include "文件路径";
+#include "./a.php";
+}
+index.php包含了a.php
 ```
 
+此时在index.php文件的include后，可以使用a.php的所有变量或函数
+
+此时在index.php文件的include前，a.php文件可以使用index.php中include前的一些变量和函数
+
+### include_once
+
+当被包含的文件被引用多次时，只会包含一次
+
+### require
+
+与include几乎 一致，但是出错后会直接终止程序，不会向下执行
+
+include出错后会继续执行后面的语句
+
+### require_once
+
+同上
